@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.non.my_mall.dao.SmsHomeRecommendProducrtDao">
+    <select id="getList" parameterType="com.non.my_mall.dto.SmsHomeRecommendProductParams" resultMap="com.non.my_mall.mbg.mapper.SmsHomeRecommendProductMapper.BaseResultMap">
+        select * from sms_home_recommend_product
+        <where>
+            <if test="productName != null">
+                product_name = #{productName}
+            </if>
+            <if test="recommendStatus != null and recommendStatus != '' or recommendStatus==0">
+                and recommend_status = #{recommendStatus}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteById">
+        delete from sms_home_recommend_product where id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.non.my_mall.mbg.model.SmsHomeRecommendProduct">
+        update sms_home_recommend_product
+        <set>
+            <if test="recommendStatus != null">
+                recommend_status = #{recommendStatus},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <insert id="insert">
+        insert into sms_home_recommend_product (recommend_status,sort,product_name,product_id ) values
+        <foreach collection="list" item="item" index="index"  separator=",">
+            (#{item.recommendStatus},#{item.sort},#{item.productName},#{item.productId})
+        </foreach>
+    </insert>
+</mapper>

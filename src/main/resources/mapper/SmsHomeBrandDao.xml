@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.non.my_mall.dao.SmsHomeBrandDao">
+    <select id="getList" parameterType="com.non.my_mall.dto.SmsHomeBrandParam" resultMap="com.non.my_mall.mbg.mapper.SmsHomeBrandMapper.BaseResultMap">
+        select * from sms_home_brand
+        <where>
+            <if test="brandName != null">
+                brand_name = #{brandName}
+            </if>
+            <if test="recommendStatus != null and recommendStatus != '' or recommendStatus==0">
+                and recommend_status = #{recommendStatus}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteById">
+        delete from sms_home_brand where id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.non.my_mall.mbg.model.SmsHomeBrand">
+        update sms_home_brand
+        <set>
+            <if test="recommendStatus != null">
+                recommend_status = #{recommendStatus},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+        </set>
+            where id = #{id}
+    </update>
+    
+    <insert id="insert">
+        insert into sms_home_brand (recommend_status,sort,brand_name,brand_id ) values 
+        <foreach collection="list" item="item" index="index"  separator=",">
+            (#{item.recommendStatus},#{item.sort},#{item.brandName},#{item.brandId})
+        </foreach>
+    </insert>
+</mapper>

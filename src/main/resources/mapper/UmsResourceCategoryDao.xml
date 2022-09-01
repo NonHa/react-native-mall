@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.non.my_mall.dao.UmsResourceCategoryDao">
+    <select id="getListAll" parameterType="com.non.my_mall.dto.UmsResourceCategoryParam"
+            resultMap="com.non.my_mall.mbg.mapper.UmsResourceCategoryMapper.BaseResultMap">
+        select * from ums_resource_category
+    </select>
+
+    <resultMap id="BaseMap" type="com.non.my_mall.dto.UmsResourceCategoryWithChildren" extends="com.non.my_mall.mbg.mapper.UmsResourceMapper.BaseResultMap">
+        <collection property="children" resultMap="com.non.my_mall.mbg.mapper.UmsResourceMapper.BaseResultMap" columnPrefix="child_"></collection>
+    </resultMap>
+    <select id="getTree" resultMap="BaseMap">
+        select
+            c.*,
+            r.id child_id,
+            r.name child_name,
+            r.category_id child_category_id
+        from ums_resource_category c left join ums_resource r on c.id = r.category_id
+    </select>
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.non.my_mall.dao.SmsFlashPromotionProductRelationDao">
+    <select id="getCount" parameterType="com.non.my_mall.dto.SmsFlashPromotionProductRelationParam" resultType="java.lang.Long">
+        select COUNT(*) from sms_flash_promotion_product_relation
+        where flash_promotion_id = #{flashPromotionId} and flash_promotion_session_id = #{flashPromotionSessionId}
+    </select>
+
+    <resultMap id="ListMap" type="com.non.my_mall.dto.SmsFlashPromotionProduct" extends="com.non.my_mall.mbg.mapper.SmsFlashPromotionProductRelationMapper.BaseResultMap">
+        <association property="product" resultMap="com.non.my_mall.mbg.mapper.PmsProductMapper.BaseResultMap" columnPrefix="m_"></association>
+    </resultMap>
+    <select id="getList" resultMap="ListMap">
+        select
+           r.*,
+            m.id m_id,
+            m.`name` m_name,
+           m.product_sn m_product_sn,
+           m.price m_price,
+           m.stock m_stock
+        from sms_flash_promotion_product_relation r left join pms_product m on r.product_id = m.id
+        where r.flash_promotion_id = #{promotionId} and r.flash_promotion_session_id = #{sessionId}
+    </select>
+
+    <insert id="create" parameterType="com.non.my_mall.mbg.model.SmsFlashPromotionProductRelation">
+        insert into sms_flash_promotion_product_relation (flash_promotion_id,flash_promotion_session_id,product_id)
+        value (#{flashPromotionId},#{flashPromotionSessionId},#{productId})
+    </insert>
+
+    <delete id="delete">
+        delete from sms_flash_promotion_product_relation where id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.non.my_mall.dto.SmsFlashPromotionProduct">
+        update sms_flash_promotion_product_relation
+            <set>
+                <if test="flashPromotionPrice != null">
+                    flash_promotion_price = #{flashPromotionPrice},
+                </if>
+                <if test="flashPromotionCount != null">
+                    flash_promotion_count = #{flashPromotionCount},
+                </if>
+                <if test="flashPromotionLimit != null">
+                    flash_promotion_limit = #{flashPromotionLimit},
+                </if>
+                <if test="sort != null">
+                    sort = #{sort},
+                </if>
+
+            </set>
+            where id = #{id}
+    </update>
+</mapper>

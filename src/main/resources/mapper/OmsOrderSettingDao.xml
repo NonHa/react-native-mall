@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.non.my_mall.dao.OmsOrderSettingDao">
+    <resultMap id="BaseResultMap" type="com.non.my_mall.mbg.model.OmsOrderSetting">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="flash_order_overtime" jdbcType="INTEGER" property="flashOrderOvertime" />
+        <result column="normal_order_overtime" jdbcType="INTEGER" property="normalOrderOvertime" />
+        <result column="confirm_overtime" jdbcType="INTEGER" property="confirmOvertime" />
+        <result column="finish_overtime" jdbcType="INTEGER" property="finishOvertime" />
+        <result column="comment_overtime" jdbcType="INTEGER" property="commentOvertime" />
+    </resultMap>
+    <select id="getList" resultMap="BaseResultMap">
+        select * from oms_order_setting
+    </select>
+
+    <update id="updateOrderSetting" parameterType="com.non.my_mall.mbg.model.OmsOrderSetting">
+        update oms_order_setting set
+        flash_order_overtime = #{flashOrderOvertime},
+        normal_order_overtime	 = #{normalOrderOvertime},
+        confirm_overtime = #{confirmOvertime},
+        finish_overtime = #{finishOvertime},
+        comment_overtime = #{commentOvertime}
+        where id = #{id}
+    </update>
+</mapper>

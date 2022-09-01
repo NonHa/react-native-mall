@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.non.my_mall.dao.OmsOrderReturnApplyDao">
+
+    <select id="getList"
+            parameterType="com.non.my_mall.dto.OmsOrderReturnApplyParam"
+            resultMap="com.non.my_mall.mbg.mapper.OmsOrderReturnApplyMapper.BaseResultMap">
+        select * from oms_order_return_apply
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="orderId != null">
+               and orderId = #{orderId}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="createTime != null">
+                and createTime like concat(STR_TO_DATE(#{createTime},'%Y-%m-%d'),"%")
+
+            </if>
+            <if test="handleMan != null">
+                and handleMan = #{handleMan}
+            </if>
+            <if test="handleTime != null">
+                and handleTime like concat(STR_TO_DATE(#{handleTime},'%Y-%m-%d') , "%")
+            </if>
+        </where>
+    </select>
+
+    <update id="update" parameterType="com.non.my_mall.dto.OmsUpdateParam">
+        update oms_order_return_apply
+          <set>
+              <if test="handleMan != null">
+                  handle_man = #{handleMan},
+              </if>
+              <if test="handleNote != null">
+                  handle_note = #{handleNote},
+              </if>
+              <if test="companyAddressId != null">
+                  company_address_id = #{companyAddressId},
+              </if>
+              <if test="receiveNote != null">
+                  receive_note = #{receiveNote},
+              </if>
+              <if test="status != null">
+                  status = #{status},
+              </if>
+              <if test="returnAmount != null">
+                  return_amount = #{returnAmount},
+              </if>
+              <if test="receiveTime != null">
+                  receive_time = #{receiveTime},
+              </if>
+              <if test="handleTime != null">
+                  handle_time = #{handleTime},
+              </if>
+          </set>
+        where id=#{id}
+    </update>
+</mapper>

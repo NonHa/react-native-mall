@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.non.my_mall.dao.UmsResourceDao">
+    <select id="getList" parameterType="com.non.my_mall.dto.UmsResourceParam" resultMap="com.non.my_mall.mbg.mapper.UmsResourceMapper.BaseResultMap">
+        select * from ums_resource
+    </select>
+
+    <update id="updateById" parameterType="com.non.my_mall.mbg.model.UmsResource">
+        update ums_resource
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="url != null">
+                url = #{url},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="categoryId != null">
+                category_id = #{categoryId},
+            </if>
+
+        </set>
+            where id = #{id}
+    </update>
+
+    <insert id="addCate" parameterType="com.non.my_mall.mbg.model.UmsResource">
+        insert into ums_resource (create_time,name,url,description,category_id) value (#{createTime},#{name},#{url},#{description},#{categoryId})
+    </insert>
+</mapper>

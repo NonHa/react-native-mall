@@ -1,0 +1,21 @@
+version: '3'
+services:
+  mall-admin:
+    image: mall/my_mall:0.0.1-SNAPSHOT
+    container_name: mall-admin
+    ports:
+      - 8080:8089
+    volumes:
+      - /home/app/mall-admin/logs:/var/logs
+      - /etc/localtime:/etc/localtime
+    environment:
+      - 'TZ="Asia/Shanghai"'
+    networks:
+      mynet:
+        ipv4_address: 192.168.0.9
+networks:
+  mynet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.0.0/16

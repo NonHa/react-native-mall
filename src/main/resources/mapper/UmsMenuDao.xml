@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.non.my_mall.dao.UmsMenuDao">
+    <select id="getList" parameterType="com.non.my_mall.dto.UmsMenuParam" resultMap="com.non.my_mall.mbg.mapper.UmsMenuMapper.BaseResultMap">
+        select * from ums_menu
+        <where>
+            <if test="parentId != null">
+                parent_id = #{parentId}
+            </if>
+            <if test="hidden != null">
+                and hidden = #{hidden}
+            </if>
+        </where>
+    </select>
+
+    <update id="update" parameterType="com.non.my_mall.mbg.model.UmsMenu">
+        update ums_menu
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="icon != null">
+                icon = #{icon},
+            </if>
+            <if test="hidden != null">
+                hidden = #{hidden},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <insert id="add" parameterType="com.non.my_mall.mbg.model.UmsMenu">
+        insert into ums_menu (title,sort,name,icon,hidden,parent_id) value (#{title},#{sort},#{name},#{icon},#{hidden},#{parentId})
+    </insert>
+
+    <resultMap id="treeMap" type="com.non.my_mall.dto.UmsMenuNode" extends="com.non.my_mall.mbg.mapper.UmsMenuMapper.BaseResultMap">
+        <collection property="children" resultMap="com.non.my_mall.mbg.mapper.UmsMenuMapper.BaseResultMap" columnPrefix="child_"></collection>
+    </resultMap>
+    <select id="getTrees" resultMap="treeMap">
+        select
+            m1.id,
+            m1.title,
+            m2.id child_id,
+            m2.title child_title
+        from ums_menu m1 left join ums_menu m2 on m1.id = m2.parent_id
+        where m1.parent_id = 0
+    </select>
+</mapper>

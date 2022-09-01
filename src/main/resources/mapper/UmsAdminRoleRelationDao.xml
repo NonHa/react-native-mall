@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.non.my_mall.dao.UmsAdminRoleRelationDao">
+    <insert id="insertList">
+        insert into ums_admin_role_relation (admin_id, role_id) values
+        <foreach collection="list" separator="," item="item" index="index">
+            (
+                #{item.adminId,jdbcType=BIGINT},
+                #{item.roleId,jdbcType=BIGINT}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteAdminRoleRelationByROleId">
+        delete from ums_admin_role_relation where admin_id = #{adminId}
+    </delete>
+</mapper>

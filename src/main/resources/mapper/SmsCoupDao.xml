@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.non.my_mall.dao.SmsCouponDao">
+    <select id="getList" parameterType="com.non.my_mall.dto.SmsCouponParam" resultMap="com.non.my_mall.mbg.mapper.SmsCouponMapper.BaseResultMap">
+        select * from sms_coupon
+        <where>
+            <if test="name != null and name != ''">
+                name = #{name}
+            </if>
+            <if test="type != null  and name != ''">
+               and type = #{type}
+            </if>
+        </where>
+    </select>
+
+    <delete id="delete">
+        delete from sms_coupon where id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.non.my_mall.mbg.model.SmsCoupon">
+        update sms_coupon
+        <set>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="platform != null">
+                platform = #{platform},
+            </if>
+            <if test="count != null">
+                count = #{count},
+            </if>
+            <if test="amount != null">
+                amount = #{amount},
+            </if>
+            <if test="perLimit != null">
+                per_limit = #{perLimit},
+            </if>
+            <if test="minPoint != null">
+                min_point = #{minPoint},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+            <if test="useType != null">
+                use_type = #{useType},
+            </if>
+            <if test="note != null">
+                note = #{note},
+            </if>
+            <if test="publishCount != null">
+                publish_count = #{publishCount},
+            </if>
+            <if test="enableTime != null">
+                enable_time = #{enableTime},
+            </if>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="memberLevel != null">
+                member_level = #{memberLevel},
+            </if>
+        </set>
+            where id =#{id}
+    </update>
+
+    <insert id="insert" parameterType="com.non.my_mall.mbg.model.SmsCoupon">
+        insert into sms_coupon (type,name,platform,count,amount,per_limit,min_point,start_time,end_time,
+                                use_type,note,publish_count,use_count,receive_count,enable_time,code,member_level)
+                                value (#{type},#{name},#{platform},#{count},#{amount},#{perLimit},#{minPoint},#{startTime},#{endTime},
+            #{useType},#{note},#{publishCount},#{useCount},#{receiveCount},#{enableTime},#{code},#{memberLevel})
+
+    </insert>
+</mapper>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.non.my_mall.dao.PmsProductDao">
+    <select id="getSimpleList" resultMap="com.non.my_mall.mbg.mapper.PmsProductMapper.BaseResultMap">
+        select * from pms_product where name like concat("%", #{keyword},"%")
+    </select>
+</mapper>

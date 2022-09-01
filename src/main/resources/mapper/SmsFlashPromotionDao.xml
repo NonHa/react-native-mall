@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.non.my_mall.dao.SmsFlashPromotionDao">
+    <select id="getFlashList" parameterType="com.non.my_mall.dto.SmsFlashPromotionParam"
+    resultMap="com.non.my_mall.mbg.mapper.SmsFlashPromotionMapper.BaseResultMap"
+    >
+        select * from sms_flash_promotion
+    </select>
+
+    <update id="updateFlashById" parameterType="com.non.my_mall.mbg.model.SmsFlashPromotion">
+        update sms_flash_promotion
+        <set>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="startDate != null">
+                start_date = #{startDate},
+            </if>
+            <if test="endDate != null">
+                end_date = #{endDate},
+            </if>
+            <if test="title != null">
+                title = #{title}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <insert id="addFlash" parameterType="com.non.my_mall.mbg.model.SmsFlashPromotion">
+        insert into sms_flash_promotion (status, create_time,title,start_date,end_date) value (
+            #{status},
+            #{createTime},
+            #{title},
+            #{startDate},
+            #{endDate}
+        )
+    </insert>
+</mapper>

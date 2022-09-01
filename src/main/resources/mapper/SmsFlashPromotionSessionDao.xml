@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.non.my_mall.dao.SmsFlashPromotionSessionDao">
+    <select id="getList" resultMap="com.non.my_mall.mbg.mapper.SmsFlashPromotionSessionMapper.BaseResultMap">
+        select * from sms_flash_promotion_session
+    </select>
+
+    <update id="updateSession" parameterType="com.non.my_mall.mbg.model.SmsFlashPromotionSession">
+        update sms_flash_promotion_session
+        <set>
+            <if test="name!=null">
+                name = #{name},
+            </if>
+
+            <if test="startTime!=null">
+                start_time = #{startTime},
+            </if>
+            <if test="endTime!=null">
+                end_time = #{endTime},
+            </if>
+            <if test="status!=null">
+                status = #{status},
+            </if>
+        </set>
+            where id = #{id}
+    </update>
+
+    <insert id="add" parameterType="com.non.my_mall.mbg.model.SmsFlashPromotionSession">
+        insert into sms_flash_promotion_session (name,start_time,end_time,status,create_time) value (#{name},#{startTime},#{endTime},#{status},#{createTime})
+    </insert>
+</mapper>
