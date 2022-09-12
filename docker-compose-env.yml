@@ -1,39 +1,4 @@
-#version: '3'
-#services:
-#  mysql:
-#    image: mysql:8.0.21
-#    container_name: mall-mysql
-#    command:  mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-#    restart: always
-#    environment:
-#      MYSQL_ROOT_PASSWORD: root
-#    ports:
-#      - 3306:3306
-#    volumes:
-#      - /home/mysql/data:/var/lib/mysql
-#      - /home/mysql/conf:/etc/mysql
-#      - /home/mysql/log:/var/log/mysql
-#      - /home/mysql/mysql-files2:/var/lib/mysql-files
-#  redis:
-#    image: redis:7
-#    container_name: mall-redis
-#    command:  redis-server --appendonly yes
-#    volumes:
-#      - /home/redis/data:/data
-#    ports:
-#      - 6379:6379
-#  nginx:
-#    image: nginx:1.22
-#    container_name: mall-nginx
-#    volumes:
-#      - /home/nginx/conf:/etc/nginx
-#      - /home/nginx/html:/usr/share/nginx/html
-#      - /home/nginx/log:/var/log/nginx
-#    ports:
-#      - 80:80
-
-#自定义网络
-version: '2'
+version: '3'
 services:
   mysql:
     image: mysql:8.0.21
@@ -43,15 +8,12 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
     ports:
-      - "3306:3306"
+      - 3306:3306
     volumes:
       - /home/mysql/data:/var/lib/mysql
       - /home/mysql/conf:/etc/mysql
       - /home/mysql/log:/var/log/mysql
       - /home/mysql/mysql-files2:/var/lib/mysql-files
-    networks:
-      mynet:
-        ipv4_address: 192.168.0.3
   redis:
     image: redis:7
     container_name: mall-redis
@@ -59,10 +21,7 @@ services:
     volumes:
       - /home/redis/data:/data
     ports:
-      - "6379:6379"
-    networks:
-      mynet:
-        ipv4_address: 192.168.0.4
+      - 6379:6379
   nginx:
     image: nginx:1.22
     container_name: mall-nginx
@@ -71,10 +30,51 @@ services:
       - /home/nginx/html:/usr/share/nginx/html
       - /home/nginx/log:/var/log/nginx
     ports:
-      - "80:80"
-    networks:
-      mynet:
-        ipv4_address: 192.168.0.8
-networks:
-  mynet:
-    driver: bridge
+      - 80:80
+
+#自定义网络
+#version: '2'
+#services:
+#  mysql:
+#    image: mysql:8.0.21
+#    container_name: mall-mysql
+#    command:  mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+#    restart: always
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root
+#    ports:
+#      - "3306:3306"
+#    volumes:
+#      - /home/mysql/data:/var/lib/mysql
+#      - /home/mysql/conf:/etc/mysql
+#      - /home/mysql/log:/var/log/mysql
+#      - /home/mysql/mysql-files2:/var/lib/mysql-files
+#    networks:
+#      mynet:
+#        ipv4_address: 192.168.0.3
+#  redis:
+#    image: redis:7
+#    container_name: mall-redis
+#    command:  redis-server --appendonly yes
+#    volumes:
+#      - /home/redis/data:/data
+#    ports:
+#      - "6379:6379"
+#    networks:
+#      mynet:
+#        ipv4_address: 192.168.0.4
+#  nginx:
+#    image: nginx:1.22
+#    container_name: mall-nginx
+#    volumes:
+#      - /home/nginx/conf:/etc/nginx
+#      - /home/nginx/html:/usr/share/nginx/html
+#      - /home/nginx/log:/var/log/nginx
+#    ports:
+#      - "80:80"
+#    networks:
+#      mynet:
+#        ipv4_address: 192.168.0.8
+#networks:
+#  mynet:
+#    driver: bridge

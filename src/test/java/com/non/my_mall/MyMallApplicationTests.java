@@ -4,6 +4,7 @@ import com.non.my_mall.dao.*;
 import com.non.my_mall.dto.*;
 import com.non.my_mall.mbg.model.*;
 import com.non.my_mall.service.UmsRoleService;
+import com.non.my_mall.utils.GitHubFileUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -92,5 +93,10 @@ class MyMallApplicationTests {
             System.out.println("listWith"+i.toString());
         }
 
+    }
+    @Test
+    void uplodeFile() {
+        GitHubFileUtil gitHubFileUtil = new GitHubFileUtil();
+        gitHubFileUtil.uploading("C:\\Users\\Administrator\\Desktop\\45.png", ".png", "测试");
     }
 }
