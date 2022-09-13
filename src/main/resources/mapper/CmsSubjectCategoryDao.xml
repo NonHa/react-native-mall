@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.non.my_mall.dao.CmsSubjectCategoryDao">
+    <select id="getList" resultType="com.non.my_mall.mbg.model.CmsSubjectCategory">
+        select * from cms_subject_category
+    </select>
+    <insert id="addCategory" parameterType="com.non.my_mall.mbg.model.CmsSubjectCategory">
+        insert into cms_subject_category (name, icon) value (#{name}, #{icon})
+    </insert>
+</mapper>
