@@ -1,10 +1,12 @@
 package com.non.my_mall.controller;
 
+import com.non.my_mall.common.api.CommonResult;
 import com.non.my_mall.dto.PicGoUplodeParams;
 import com.non.my_mall.utils.GitHubFileUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
@@ -16,9 +18,10 @@ import java.util.*;
 @Controller
 @RequestMapping("/upload")
 public class GithubPicGoController {
+    @ResponseBody
     @RequestMapping(value = "/addPic", method = RequestMethod.POST)
-    public String add(MultipartFile file) {
-        System.out.println("file"+file);
+    public CommonResult add(MultipartFile file) {
+
         // 获取文件原本的名字
         String originName = file.getOriginalFilename();
         // 判断文件是否是pdf文件
@@ -39,7 +42,7 @@ public class GithubPicGoController {
         String endName = originName.substring(count); //取出文件类型
         String fileType = originName.substring(count + 1); //文件类型
         if(!set.contains(endName)){
-            return new String("上传的文件类型错误,只能上传pdf,doc,docx类型的文件");
+            return CommonResult.failed(new String("上传的文件类型错误,只能上传pdf,doc,docx类型的文件")) ;
         }
         // 创建保存路径
         //日期格式
@@ -54,12 +57,19 @@ public class GithubPicGoController {
             folder.mkdirs();
         }
         String saveName = originName;
+
+
         try {
             file.transferTo(new File(folder,saveName));
             String filePath = savePath + "\\" + saveName;
-            return new String("文件路径为:" + filePath);
+            GitHubFileUtil gitHubFileUtil = new GitHubFileUtil();
+            System.out.println("filePath:"+filePath);
+            String uploading = gitHubFileUtil.uploading(filePath, endName, saveName);
+            System.out.println("uploading:"+CommonResult.success(uploading));
+
+            return CommonResult.success(uploading);
         } catch (IOException e){
-            return new String(e.getMessage());
+            return CommonResult.failed(new String(e.getMessage())) ;
         }
 
 

@@ -11,5 +11,5 @@ public class PicGoUplodeParams {
     public static final String OWNER = "NonHa";
     public static final String REPO = "CDN";
     public static final String PATH = "images/";
-    public static final String Authorization = "token " + "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";
+    public static final String Authorization = "token " + "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";
 }
