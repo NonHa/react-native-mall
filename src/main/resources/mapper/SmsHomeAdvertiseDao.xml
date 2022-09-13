@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.non.my_mall.dao.SmsHomeAdvertiseDao">
+    <select id="getList" parameterType="com.non.my_mall.dto.SmsHomeAdvertiseParams" resultMap="com.non.my_mall.mbg.mapper.SmsHomeAdvertiseMapper.BaseResultMap">
+        select * from sms_home_advertise
+        <where>
+            <if test="name != null and name != ''">
+                `name`=#{name}
+            </if>
+            <if test="type != null">
+                and type=#{type}
+            </if>
+            <if test="status != null and status != ''">
+                and status=#{status}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from sms_home_advertise where id=#{id}
+    </delete>
+
+    <update id="updateById" parameterType="com.non.my_mall.mbg.model.SmsHomeAdvertise">
+        update sms_home_advertise
+        <set>
+            <if test="name != null">
+                name=#{name},
+            </if>
+            <if test="type != null">
+                type=#{type},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="pic != null">
+                pic=#{pic},
+            </if>
+            <if test="url != null">
+                url=#{url},
+            </if>
+            <if test="sort != null">
+                sort=#{sort},
+            </if>
+            <if test="startTime != null">
+                start_time=#{startTime},
+            </if>
+            <if test="endTime != null">
+                end_time=#{endTime},
+            </if>
+        </set>
+            where id=#{id}
+    </update>
+
+    <insert id="addItem" parameterType="com.non.my_mall.mbg.model.SmsHomeAdvertise">
+        insert into sms_home_advertise (name, type, status,pic,url,sort,start_time,end_time) value
+            (#{name},#{type},#{status},#{pic},#{url}
+            ,#{sort},#{startTime},#{endTime})
+    </insert>
+</mapper>

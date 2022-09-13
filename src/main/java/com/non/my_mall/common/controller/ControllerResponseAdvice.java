@@ -22,7 +22,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 public class ControllerResponseAdvice implements ResponseBodyAdvice<Object> {
     @Override
     public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> aClass) {
-        // response是ResultVo类型，或者注释了NotControllerResponseAdvice都不进行包装
+        // response是CommonResult类型，或者注释了NotControllerResponseAdvice都不进行包装
         return !methodParameter.getParameterType().isAssignableFrom(CommonResult.class)
                 && !methodParameter.hasMethodAnnotation(NotControllerResponseAdvice.class);
     }
