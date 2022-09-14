@@ -33,4 +33,11 @@ public class SmsHomeRecommendSubjectServiceImpl implements SmsHomeRecommendSubje
     public int insert(List<SmsHomeRecommendSubject> param) {
         return homeRecommendSubjectDao.insert(param);
     }
+
+    @Override
+    public List<SmsHomeRecommendSubject> getInfoList(SmsHomeRecommendSubjectParam param) {
+        PageHelper.startPage(param.getPage(),param.getPageSize());
+
+        return homeRecommendSubjectDao.getInfoList(param);
+    }
 }

@@ -12,4 +12,6 @@ public interface SmsHomeRecommendSubjectDao {
     int deleteById(Long id);
     int update(SmsHomeRecommendSubject param);
     int insert(List<SmsHomeRecommendSubject> param);
+    List<SmsHomeRecommendSubject> getInfoList(SmsHomeRecommendSubjectParam param);
+
 }

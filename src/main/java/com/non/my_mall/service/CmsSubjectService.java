@@ -18,4 +18,6 @@ public interface CmsSubjectService {
      * 分页查询专题
      */
     List<CmsSubject> list(String keyword, Integer pageNum, Integer pageSize);
+
+    int add(CmsSubject param);
 }

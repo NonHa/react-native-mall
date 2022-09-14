@@ -36,4 +36,27 @@
             (#{item.recommendStatus},#{item.sort},#{item.subjectName},#{item.subjectId})
         </foreach>
     </insert>
+
+    <resultMap id="BaseResultMap" extends="com.non.my_mall.mbg.mapper.CmsSubjectMapper.BaseResultMap" type="com.non.my_mall.dto.SmsHomeSubjectParam">
+        <result column="subject_id" jdbcType="BIGINT" property="subjectId" />
+        <result column="subject_name" jdbcType="VARCHAR" property="subjectName" />
+        <result column="recommend_status" jdbcType="INTEGER" property="recommendStatus" />
+        <result column="sort" jdbcType="INTEGER" property="sort" />
+    </resultMap>
+    <select id="getInfoList" parameterType="com.non.my_mall.dto.SmsHomeRecommendSubjectParam"
+            resultMap="BaseResultMap">
+        select rs.*,
+               s.category_name,
+               s.category_id,
+               s.pic
+        from sms_home_recommend_subject rs left join cms_subject s on rs.subject_id = s.id
+         <where>
+            <if test="recommendStatus != null">
+                rs.recommend_status=#{recommendStatus}
+            </if>
+             <if test="categoryId != null">
+                 and s.category_id=#{categoryId}
+             </if>
+        </where>
+    </select>
 </mapper>

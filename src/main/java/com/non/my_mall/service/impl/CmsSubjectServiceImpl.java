@@ -1,5 +1,6 @@
 package com.non.my_mall.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.github.pagehelper.PageHelper;
 import com.non.my_mall.mbg.mapper.CmsSubjectMapper;
 import com.non.my_mall.mbg.model.CmsSubject;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,5 +37,13 @@ public class CmsSubjectServiceImpl implements CmsSubjectService {
             criteria.andTitleLike("%" + keyword + "%");
         }
         return subjectMapper.selectByExample(example);
+    }
+
+    @Override
+    public int add(CmsSubject param) {
+        CmsSubject cmsSubject = new CmsSubject();
+        BeanUtil.copyProperties(param, cmsSubject);
+        cmsSubject.setCreateTime(new Date());
+        return subjectMapper.insertSelective(cmsSubject);
     }
 }

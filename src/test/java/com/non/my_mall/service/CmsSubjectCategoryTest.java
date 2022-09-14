@@ -1,7 +1,10 @@
 package com.non.my_mall.service;
 
+import com.non.my_mall.dto.SmsHomeRecommendSubjectParam;
 import com.non.my_mall.mbg.model.CmsSubjectCategory;
+import com.non.my_mall.mbg.model.SmsHomeRecommendSubject;
 import com.non.my_mall.service.impl.CmsSubjectCategoryServiceImpl;
+import com.non.my_mall.service.impl.SmsHomeRecommendSubjectServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,10 +18,19 @@ public class CmsSubjectCategoryTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(CmsSubjectCategoryTest.class);
     @Autowired
     private CmsSubjectCategoryServiceImpl subjectCategoryService;
-
+    @Autowired
+    private SmsHomeRecommendSubjectServiceImpl homeRecommendSubjectService;
     @Test
     public void getCategoryList() {
         List<CmsSubjectCategory> list = subjectCategoryService.getList();
         LOGGER.info("list： {}", list);
+    }
+    @Test
+    public void getHomeRecommendSubject() {
+        SmsHomeRecommendSubjectParam param = new SmsHomeRecommendSubjectParam();
+        param.setRecommendStatus(1);
+        param.setCategoryId(2);
+        List<SmsHomeRecommendSubject> infoList = homeRecommendSubjectService.getInfoList(param);
+        LOGGER.info("list=： {}", infoList);
     }
 }

@@ -25,7 +25,13 @@ public class SmsHomeRecommendSubjectController {
 
         return CommonPage.restPage(list);
     }
+    @RequestMapping(value = "/info/list",method = RequestMethod.POST)
+    @ResponseBody
+    public CommonPage<SmsHomeRecommendSubject> getInfoList(@RequestBody SmsHomeRecommendSubjectParam homeBrandParam) {
+        List<SmsHomeRecommendSubject> list = homeRecommendProducrtDao.getInfoList(homeBrandParam);
 
+        return CommonPage.restPage(list);
+    }
     @RequestMapping(value = "/delete",method = RequestMethod.GET)
     @ResponseBody
     public String delete(@RequestParam Long id) {

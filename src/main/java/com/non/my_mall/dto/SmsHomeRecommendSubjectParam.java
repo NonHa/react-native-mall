@@ -6,5 +6,6 @@ import lombok.Data;
 public class SmsHomeRecommendSubjectParam extends PageParams{
     private String subjectName;
     private Integer recommendStatus;
+    private Integer categoryId;
 
 }

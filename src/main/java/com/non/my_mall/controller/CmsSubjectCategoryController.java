@@ -1,6 +1,7 @@
 package com.non.my_mall.controller;
 
 import com.non.my_mall.common.api.CommonPage;
+import com.non.my_mall.dao.CmsSubjectCategoryDao;
 import com.non.my_mall.mbg.model.CmsSubjectCategory;
 import com.non.my_mall.service.impl.CmsSubjectCategoryServiceImpl;
 import io.swagger.annotations.Api;
@@ -19,6 +20,7 @@ import java.util.List;
 public class CmsSubjectCategoryController {
     @Autowired
     private CmsSubjectCategoryServiceImpl subjectCategoryService;
+
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
