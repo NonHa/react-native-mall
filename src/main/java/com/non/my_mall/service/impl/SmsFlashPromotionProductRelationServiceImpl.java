@@ -39,4 +39,8 @@ public class SmsFlashPromotionProductRelationServiceImpl implements SmsFlashProm
     public int update(SmsFlashPromotionProduct param) {
         return flashPromotionProductRelationDao.update(param);
     }
+
+    public static interface FrontUserDetailService {
+
+    }
 }

@@ -3,14 +3,19 @@ package com.non.my_mall.config;
 import com.non.my_mall.component.JwtAuthenticationTokenFilter;
 import com.non.my_mall.component.RestAuthenticationEntryPoint;
 import com.non.my_mall.component.RestfulAccessDeniedHandler;
-import com.non.my_mall.dao.UmsAdminRoleRelationDao;
 import com.non.my_mall.dto.AdminUserDetails;
 import com.non.my_mall.mbg.model.UmsAdmin;
 import com.non.my_mall.mbg.model.UmsPermission;
+import com.non.my_mall.service.CustomUserDetailService;
 import com.non.my_mall.service.UmsAdminRoleRelationService;
 import com.non.my_mall.service.UmsAdminService;
-import com.non.my_mall.service.impl.UmsAdminRoleRelationServiceImpl;
+import com.non.my_mall.service.impl.AdminUserDetailService;
+import com.non.my_mall.service.impl.FrontUserDetailService;
+import com.non.my_mall.utils.filter.MyAuthenticationFilter;
+import com.non.my_mall.utils.filter.MyAuthenticationProvider;
+import com.non.my_mall.utils.filter.MyAuthenticationSucessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -25,8 +30,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -34,6 +44,7 @@ import java.util.List;
  * SpringSecurity的配置
  * Created by macro on 2018/4/26.
  */
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled=true)
@@ -46,6 +57,39 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
     @Autowired
     private UmsAdminRoleRelationService umsAdminRoleRelationDao;
+
+    //自定义的登录成功时的处理器
+    @Autowired
+    private MyAuthenticationSucessHandler authenticationSuccessHandler;
+//
+//    //自定义的登录失败时的处理器
+//    @Autowired
+//    private AuthenticationFailureHandler authenticationFailureHandler;
+
+    //自定义的无权限时的处理器
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    //自定义的退出成功时的处理器
+//    @Autowired
+//    private LogoutSuccessHandler logoutSuccessHandler;
+
+
+    //这个为前置过滤器，不了解学习之前的博客
+//    @Autowired
+//    private AuthFilter authFilter;
+
+    //注入我们自定义的后台管理的UserDetailService
+    @Autowired
+    @Qualifier("adminUserDetailService")
+    private CustomUserDetailService adminUserDetailService;
+
+    //注入我们自定义的前台的UserDetailService
+
+    @Autowired
+    @Qualifier("frontUserDetailService")
+    private CustomUserDetailService frontUserDetailService;
+
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf()// 由于使用的是JWT，我们这里不需要csrf
@@ -65,7 +109,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/v2/api-docs/**"
                 )
                 .permitAll()
-                .antMatchers("/admin/login", "/admin/register")// 对登录注册要允许匿名访问
+                .antMatchers("/admin/login", "/admin/register", "/sso/*")// 对 后台用户和 app会员登录注册要允许匿名访问
                 .permitAll()
                 .antMatchers(HttpMethod.OPTIONS)//跨域请求会先进行一次options请求
                 .permitAll()
@@ -75,8 +119,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticated();
         // 禁用缓存
         httpSecurity.headers().cacheControl();
+
+
         // 添加JWT filter
         httpSecurity.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        //用自定义AbstractAuthenticationProcessingFilter覆盖UsernamePasswordAuthenticationFilte
+        httpSecurity.addFilterAt(authentication(), UsernamePasswordAuthenticationFilter.class);
         //添加自定义未授权和未登录结果返回
         httpSecurity.exceptionHandling()
                 .accessDeniedHandler(restfulAccessDeniedHandler)
@@ -85,8 +133,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService())
-                .passwordEncoder(passwordEncoder());
+
+        //创建一个自定义的AbstractUserDetailsAuthenticationProvider对象
+        MyAuthenticationProvider myAuthenticationProvider = new MyAuthenticationProvider();
+        //把我们自定义的userDetailService，放入这个对象
+        List<CustomUserDetailService> userDetailServices = new ArrayList<>();
+        userDetailServices.add(adminUserDetailService);
+        userDetailServices.add(frontUserDetailService);
+        myAuthenticationProvider.setUserDetailsServices(userDetailServices);
+        myAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        //配置我们自定义的AbstractUserDetailsAuthenticationProvider
+        auth.authenticationProvider(myAuthenticationProvider);
+
+//        auth.userDetailsService(userDetailsService())
+//                .passwordEncoder(passwordEncoder());
+    }
+
+    //注入我们自定义的AbstractAuthenticationProcessingFilter
+    @Bean
+    public MyAuthenticationFilter authentication() throws Exception {
+        //此处生成一个自定义的AbstractAuthenticationProcessingFilter对象，并配置登录请求的路径
+        MyAuthenticationFilter myAuthenticationFilter = new MyAuthenticationFilter("/admin/login");
+        myAuthenticationFilter.setAuthenticationManager(this.authenticationManager());
+
+        //登录成功时处理器
+        myAuthenticationFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
+        //登录失败时的处理器
+//        myAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler);
+        return myAuthenticationFilter;
     }
 
     @Bean
@@ -94,20 +168,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        //获取登录用户信息
-        return username -> {
-            UmsAdmin admin = adminService.getAdminByUsername(username);
-
-            if (admin != null) {
-                List<UmsPermission> permissionList = umsAdminRoleRelationDao.getPermissionList(admin.getId());
-
-                return new AdminUserDetails(admin,permissionList);
-            }
-            throw new UsernameNotFoundException("用户名或密码错误");
-        };
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        //获取登录用户信息
+//        return username -> {
+//            UmsAdmin admin = adminService.getAdminByUsername(username);
+//
+//            if (admin != null) {
+//                List<UmsPermission> permissionList = umsAdminRoleRelationDao.getPermissionList(admin.getId());
+//
+//                return new AdminUserDetails(admin,permissionList);
+//            }
+//            throw new UsernameNotFoundException("用户名或密码错误");
+//        };
+//    }
 
     @Bean
     public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter(){

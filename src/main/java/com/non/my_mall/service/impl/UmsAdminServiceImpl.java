@@ -90,7 +90,9 @@ public class UmsAdminServiceImpl implements UmsAdminService {
     public String login(String username, String password) {
         String token = null;
         try {
+            System.out.println("login");
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            System.out.println("userDetails=="+userDetails);
             if (!passwordEncoder.matches(password, userDetails.getPassword())) {
                 throw new BadCredentialsException("密码不正确");
             }

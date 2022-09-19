@@ -23,7 +23,7 @@ import java.util.List;
 
 @Api(value = "测试",tags = "PmsBrandController", description = "商品")
 @Controller
-@RequestMapping("/brand")
+@RequestMapping("/app/brand")
 public class PmsBrandController {
     @Autowired
     private PmsBrandService demoService;

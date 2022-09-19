@@ -1,6 +1,9 @@
 package com.non.my_mall.service;
 
 import com.non.my_mall.common.api.CommonResult;
+import com.non.my_mall.mbg.model.UmsMember;
+
+import java.util.List;
 
 public interface UmsMemeberService {
     /**
@@ -12,4 +15,11 @@ public interface UmsMemeberService {
      * 判断验证码和手机号码是否匹配
      */
     CommonResult verifyAuthCode(String telephone, String authCode);
+
+    /**
+     * 新增会员用户
+     * */
+    UmsMember addMemeber(UmsMember param);
+
+    List<UmsMember> getMember(String phone);
 }

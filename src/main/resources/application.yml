@@ -51,6 +51,10 @@ redis:
   key:
     admin: 'ums:admin'
     resourceList: 'ums:resourceList'
+    prefix:
+      authCode: 'non'
+    expire:
+      authCode: 123
   expire:
     common: 86400 # 24小时
 
