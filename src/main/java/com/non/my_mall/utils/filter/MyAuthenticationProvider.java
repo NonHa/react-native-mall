@@ -1,5 +1,6 @@
 package com.non.my_mall.utils.filter;
 
+import com.non.my_mall.dto.SecurityUser;
 import com.non.my_mall.service.CustomUserDetailService;
 import com.non.my_mall.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,25 +50,23 @@ public class MyAuthenticationProvider extends AbstractUserDetailsAuthenticationP
     }
 
     @Override
-    protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+    protected SecurityUser retrieveUser(String username, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
         this.prepareTimingAttackProtection();
         try {
             //在Filter中获取的请求中的所有参数，在此处拿出
             Map detail = (Map) authentication.getDetails();
-            System.out.println("detail==>"+authentication);
+            System.out.println("detail==>"+detail);
 
-            UserDetails loadedUser = null;
+            SecurityUser loadedUser = null;
             //枚举所有自定义的userDetailsService
             for (CustomUserDetailService userDetailsService : userDetailsServices) {
                 //在请求中获取平台参数
                 Object platform = detail.get("platform");
-
-                System.out.println("platform"+username);
                 //如果不为null则与userDetailsService匹配，配对成功则使用该userDetailsService的loadUserByUsername
-                if (Objects.nonNull(platform) && userDetailsService.supports("front")) {
+                if (Objects.nonNull(platform) && userDetailsService.supports(platform.toString())) {
                     System.out.println("userDetailsService==>"+userDetailsService);
+                    loadedUser = (SecurityUser) userDetailsService.loadUserByUsername(username);
 
-                    loadedUser = userDetailsService.loadUserByUsername(username);
                     System.out.println("loadedUser==>"+loadedUser);
                     break;
                 }
@@ -77,6 +76,7 @@ public class MyAuthenticationProvider extends AbstractUserDetailsAuthenticationP
             if (loadedUser == null) {
                 throw new InternalAuthenticationServiceException("UserDetailsService returned null, which is an interface contract violation");
             } else {
+
                 return loadedUser;
             }
         } catch (UsernameNotFoundException var4) {

@@ -30,7 +30,7 @@ public class FrontUserDetailService implements CustomUserDetailService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+    public SecurityUser loadUserByUsername(String s) throws UsernameNotFoundException {
         System.out.println("front");
         List<UmsMember> member = memeberService.getMember(s);
         if (member.size() > 0) {

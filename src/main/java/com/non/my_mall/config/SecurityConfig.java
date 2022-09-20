@@ -11,6 +11,7 @@ import com.non.my_mall.service.UmsAdminRoleRelationService;
 import com.non.my_mall.service.UmsAdminService;
 import com.non.my_mall.service.impl.AdminUserDetailService;
 import com.non.my_mall.service.impl.FrontUserDetailService;
+import com.non.my_mall.utils.filter.MyAuthenticationFailureHandler;
 import com.non.my_mall.utils.filter.MyAuthenticationFilter;
 import com.non.my_mall.utils.filter.MyAuthenticationProvider;
 import com.non.my_mall.utils.filter.MyAuthenticationSucessHandler;
@@ -62,9 +63,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private MyAuthenticationSucessHandler authenticationSuccessHandler;
 //
-//    //自定义的登录失败时的处理器
-//    @Autowired
-//    private AuthenticationFailureHandler authenticationFailureHandler;
+    //自定义的登录失败时的处理器
+    @Autowired
+    private MyAuthenticationFailureHandler authenticationFailureHandler;
 
     //自定义的无权限时的处理器
     @Autowired
@@ -159,7 +160,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //登录成功时处理器
         myAuthenticationFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
         //登录失败时的处理器
-//        myAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler);
+        myAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler);
         return myAuthenticationFilter;
     }
 

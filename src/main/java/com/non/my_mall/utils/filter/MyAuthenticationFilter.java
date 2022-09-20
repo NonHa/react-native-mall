@@ -51,7 +51,7 @@ public class MyAuthenticationFilter extends AbstractAuthenticationProcessingFilt
         if (password == null) {
             password = "";
         }
-
+        System.out.println("request.getParameter==>"+ request.getParameter("platform"));
         username = username.trim();
 
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
@@ -77,8 +77,10 @@ public class MyAuthenticationFilter extends AbstractAuthenticationProcessingFilt
                               UsernamePasswordAuthenticationToken authRequest) {
         Map<String, Object> params = new HashMap<>();
         Map<String, String[]> parameterMap = request.getParameterMap();
+
         if (!CollectionUtils.isEmpty(parameterMap)) {
-            params.putAll(parameterMap);
+//            params.putAll(parameterMap);
+            params.put("platform", request.getParameter("platform"));
         }
         Enumeration headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
