@@ -8,16 +8,16 @@ import com.non.my_mall.service.UmsMemeberService;
 import com.non.my_mall.utils.JwtTokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Slf4j
-@Service("frontUserDetailService")
-public class FrontUserDetailService implements CustomUserDetailService {
-    private final String PLAT_FORM = "front";
+@Service("appUserDetailService")
+public class AppUserDetailService implements CustomUserDetailService {
+    private final String PLAT_FORM = "app";
 
     @Autowired
     private UmsMemeberService memeberService;
@@ -29,6 +29,8 @@ public class FrontUserDetailService implements CustomUserDetailService {
         return PLAT_FORM.equals(platform);
     }
 
+    @Resource
+    private RedisServiceImpl redisService;
     @Override
     public SecurityUser loadUserByUsername(String s) throws UsernameNotFoundException {
         System.out.println("front");
@@ -36,10 +38,12 @@ public class FrontUserDetailService implements CustomUserDetailService {
         if (member.size() > 0) {
             UmsAdmin umsAdmin = new UmsAdmin();
             UmsMember item = member.get(0);
-            umsAdmin.setUsername(item.getUsername());
+            umsAdmin.setUsername(item.getPhone());
             umsAdmin.setPassword(item.getPassword());
             SecurityUser securityUser = new SecurityUser(umsAdmin);
             String token = jwtTokenUtil.generateToken(securityUser);
+            redisService.set(item.getPhone(), token);
+            redisService.set("platform", "App");
             securityUser.setToken(token);
             return securityUser;
 

@@ -3,14 +3,9 @@ package com.non.my_mall.config;
 import com.non.my_mall.component.JwtAuthenticationTokenFilter;
 import com.non.my_mall.component.RestAuthenticationEntryPoint;
 import com.non.my_mall.component.RestfulAccessDeniedHandler;
-import com.non.my_mall.dto.AdminUserDetails;
-import com.non.my_mall.mbg.model.UmsAdmin;
-import com.non.my_mall.mbg.model.UmsPermission;
 import com.non.my_mall.service.CustomUserDetailService;
 import com.non.my_mall.service.UmsAdminRoleRelationService;
 import com.non.my_mall.service.UmsAdminService;
-import com.non.my_mall.service.impl.AdminUserDetailService;
-import com.non.my_mall.service.impl.FrontUserDetailService;
 import com.non.my_mall.utils.filter.MyAuthenticationFailureHandler;
 import com.non.my_mall.utils.filter.MyAuthenticationFilter;
 import com.non.my_mall.utils.filter.MyAuthenticationProvider;
@@ -27,17 +22,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -88,12 +82,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //注入我们自定义的前台的UserDetailService
 
     @Autowired
-    @Qualifier("frontUserDetailService")
-    private CustomUserDetailService frontUserDetailService;
+    @Qualifier("appUserDetailService")
+    private CustomUserDetailService appUserDetailService;
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf()// 由于使用的是JWT，我们这里不需要csrf
+        httpSecurity.cors().and().csrf()// 由于使用的是JWT，我们这里不需要csrf
                 .disable()
                 .sessionManagement()// 基于token，所以不需要session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -128,9 +122,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.addFilterAt(authentication(), UsernamePasswordAuthenticationFilter.class);
         //添加自定义未授权和未登录结果返回
         httpSecurity.exceptionHandling()
-                .accessDeniedHandler(restfulAccessDeniedHandler)
+//                .accessDeniedHandler(restfulAccessDeniedHandler)
                 .authenticationEntryPoint(restAuthenticationEntryPoint);
+
     }
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -140,7 +136,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //把我们自定义的userDetailService，放入这个对象
         List<CustomUserDetailService> userDetailServices = new ArrayList<>();
         userDetailServices.add(adminUserDetailService);
-        userDetailServices.add(frontUserDetailService);
+        userDetailServices.add(appUserDetailService);
         myAuthenticationProvider.setUserDetailsServices(userDetailServices);
         myAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         //配置我们自定义的AbstractUserDetailsAuthenticationProvider
@@ -163,7 +159,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         myAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler);
         return myAuthenticationFilter;
     }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        final CorsConfiguration configuration = new CorsConfiguration();
 
+        //指定允许跨域的请求(*所有)：http://wap.ivt.guansichou.com
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
+        // setAllowCredentials(true) is important, otherwise:
+        // The value of the 'Access-Control-Allow-Origin' header in the response must not be the wildcard '*' when the request's credentials mode is 'include'.
+//        configuration.setAllowCredentials(true);
+        // setAllowedHeaders is important! Without it, OPTIONS preflight request
+        // will fail with 403 Invalid CORS request
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "X-User-Agent", "Content-Type"));
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

@@ -21,6 +21,7 @@ public class MyAuthenticationFailureHandler implements AuthenticationFailureHand
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
 
         Map<String,Object> map = new HashMap<>();
+        System.out.println("exception=="+exception);
         map.put("status", HttpStatus.HTTP_UNAUTHORIZED);
         map.put("message", exception.getMessage());
 //        System.out.println("response==>"+response.getStatus());

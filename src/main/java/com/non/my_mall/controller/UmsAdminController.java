@@ -72,6 +72,7 @@ public class UmsAdminController {
             return CommonResult.unauthorized(null);
         }
         UmsAdmin adminByUsername = adminService.getAdminByUsername(principal.getName());
+        System.out.println("adminByUsername"+adminByUsername);
         HashMap<String, Object> data = new HashMap<>();
         data.put("username", adminByUsername.getUsername());
         System.out.println("adminByUsername.getId()"+adminByUsername.getId());

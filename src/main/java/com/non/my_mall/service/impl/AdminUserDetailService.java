@@ -29,8 +29,10 @@ public class AdminUserDetailService implements CustomUserDetailService {
 
     @Override
     public SecurityUser loadUserByUsername(String s) throws UsernameNotFoundException {
+        System.out.println("s=="+s);
 
         UmsAdmin adminByUsername = adminService.getAdminByUsername(s);
+        System.out.println("adminByUsername=="+adminByUsername);
         if (adminByUsername != null) {
             System.out.println("there is admin==>"+adminByUsername.getPassword());
             SecurityUser securityUser = new SecurityUser(adminByUsername);

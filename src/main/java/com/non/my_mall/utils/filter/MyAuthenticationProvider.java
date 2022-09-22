@@ -2,6 +2,7 @@ package com.non.my_mall.utils.filter;
 
 import com.non.my_mall.dto.SecurityUser;
 import com.non.my_mall.service.CustomUserDetailService;
+import com.non.my_mall.service.impl.RedisServiceImpl;
 import com.non.my_mall.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,13 +16,14 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.Assert;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class MyAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+
+
     private volatile String userNotFoundEncodedPassword;
 
     //这里是定制的UserUserDetailService， 分为Admin和Front
@@ -61,9 +63,14 @@ public class MyAuthenticationProvider extends AbstractUserDetailsAuthenticationP
             //枚举所有自定义的userDetailsService
             for (CustomUserDetailService userDetailsService : userDetailsServices) {
                 //在请求中获取平台参数
-                Object platform = detail.get("platform");
+                String platform = (String) detail.get("platform") ;
+                System.out.println("platform=="+platform);
+                if (platform == null || platform.length() == 0) {
+                    platform = "admin";
+                }
+
                 //如果不为null则与userDetailsService匹配，配对成功则使用该userDetailsService的loadUserByUsername
-                if (Objects.nonNull(platform) && userDetailsService.supports(platform.toString())) {
+                if (Objects.nonNull(platform) && userDetailsService.supports(platform)) {
                     System.out.println("userDetailsService==>"+userDetailsService);
                     loadedUser = (SecurityUser) userDetailsService.loadUserByUsername(username);
 
