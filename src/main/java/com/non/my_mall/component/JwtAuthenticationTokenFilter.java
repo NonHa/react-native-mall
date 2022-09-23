@@ -60,6 +60,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith(this.tokenHead)) {
             String authToken = authHeader.substring(this.tokenHead.length());// The part after "Bearer "
+//            System.out.println("authToken==>"+authToken);
             String username = jwtTokenUtil.getUserNameFromToken(authToken);
             Object userInfo = redisService.get(username);
 

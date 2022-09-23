@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
 @Slf4j
 @Service("adminUserDetailService")
 @Primary
@@ -22,6 +24,9 @@ public class AdminUserDetailService implements CustomUserDetailService {
     private UmsAdminService adminService;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+
+    @Resource
+    private RedisServiceImpl redisService;
     @Override
     public Boolean supports(String platform) {
         return PLAT_FORM.equals(platform);
@@ -38,6 +43,9 @@ public class AdminUserDetailService implements CustomUserDetailService {
             SecurityUser securityUser = new SecurityUser(adminByUsername);
             String token = jwtTokenUtil.generateToken(securityUser);
             securityUser.setToken(token);
+
+            redisService.set(adminByUsername.getUsername(), token);
+            redisService.set("platform", "admin");
             return securityUser;
         }
         throw new UsernameNotFoundException("用户名或密码错误");

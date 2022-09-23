@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+import java.util.List;
+
 @Controller
 @Api(tags = "UmsMemberController", description = "会员登录注册管理")
 @RequestMapping("/sso")
@@ -39,4 +42,17 @@ public class UmsMemberController {
         System.out.println("telephone="+ telephone);
         return memeberService.verifyAuthCode(telephone,authCode);
     }
+
+    @ApiOperation("获取会员信息")
+    @RequestMapping(value = "/info", method = RequestMethod.GET)
+    @ResponseBody
+    public UmsMember getMemeber(Principal principal) {
+
+        List<UmsMember> member = memeberService.getMember(principal.getName());
+        if (member.size() > 0) {
+            return member.get(0);
+        }
+        return null;
+    }
+
 }

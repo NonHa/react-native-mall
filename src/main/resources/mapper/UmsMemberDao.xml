@@ -6,7 +6,22 @@
         value (#{username}, #{password},#{nickname},#{phone},#{createTime},#{gender})
     </insert>
 
-    <select id="getMember"  resultType="com.non.my_mall.mbg.model.UmsMember">
-        select * from ums_member where phone=#{phone}
+    <resultMap id="BaseMap" type="com.non.my_mall.dto.UmsMemberParam" extends="com.non.my_mall.mbg.mapper.UmsMemberMapper.BaseResultMap">
+        <result property="levelName"  column="levelName"></result>
+        <association property="detail" resultMap="com.non.my_mall.mbg.mapper.UmsMemberStatisticsInfoMapper.BaseResultMap" columnPrefix="static_"></association>
+    </resultMap>
+    <select id="getMember" resultMap="BaseMap">
+        select u.*,
+               s.comment_count static_comment_count,
+               s.order_count static_order_count,
+               s.consume_amount static_consume_amount,
+               s.coupon_count static_coupon_count,
+               s.return_order_count static_return_order_count,
+               s.attend_count static_attend_count,
+               s.fans_count static_fans_count,
+                l.`name` levelName
+        from ums_member u left join ums_member_statistics_info s on u.id = s.member_id
+        left join ums_member_level l on u.member_level_id = l.id
+        where  u.phone=#{phone}
     </select>
 </mapper>
