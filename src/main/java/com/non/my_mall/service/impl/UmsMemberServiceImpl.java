@@ -86,4 +86,9 @@ public class UmsMemberServiceImpl implements UmsMemeberService {
     public List<UmsMember> getMember(String phone) {
         return memberDao.getMember(phone);
     }
+
+    @Override
+    public int updateMember(UmsMember param) {
+        return 0;
+    }
 }

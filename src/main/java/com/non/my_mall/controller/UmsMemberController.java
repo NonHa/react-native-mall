@@ -27,6 +27,13 @@ public class UmsMemberController {
     public UmsMember addMemeber(@RequestBody UmsMember param) {
         return memeberService.addMemeber(param);
     }
+
+    @ApiOperation("更新会员信息")
+    @RequestMapping(value = "/updateMemeber", method = RequestMethod.POST)
+    @ResponseBody
+    public int updateMemeber(@RequestBody UmsMember param) {
+        return memeberService.updateMember(param);
+    }
     @ApiOperation("获取验证码")
     @RequestMapping(value = "/getAuthCode", method = RequestMethod.GET)
     @ResponseBody
@@ -47,7 +54,6 @@ public class UmsMemberController {
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     @ResponseBody
     public UmsMember getMemeber(Principal principal) {
-
         List<UmsMember> member = memeberService.getMember(principal.getName());
         if (member.size() > 0) {
             return member.get(0);

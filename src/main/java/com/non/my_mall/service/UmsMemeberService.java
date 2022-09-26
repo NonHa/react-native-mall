@@ -22,4 +22,6 @@ public interface UmsMemeberService {
     UmsMember addMemeber(UmsMember param);
 
     List<UmsMember> getMember(String phone);
+
+    int updateMember(UmsMember param);
 }

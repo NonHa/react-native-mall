@@ -12,5 +12,6 @@ public interface UmsMemberDao {
     int addMemeber(UmsMember param);
 
     List<UmsMember> getMember(@Param("phone") String phone);
+    int updateMember(UmsMember param);
 
 }

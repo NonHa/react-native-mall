@@ -24,4 +24,8 @@
         left join ums_member_level l on u.member_level_id = l.id
         where  u.phone=#{phone}
     </select>
+
+    <update id="updateMember" parameterType="com.non.my_mall.mbg.model.UmsMember">
+        update ums_member set (username,job,gender,birthday,personalized_signature) value (#{username},#{job},#{gender},#{birthday},#{personalizedSignature})
+    </update>
 </mapper>
