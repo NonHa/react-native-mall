@@ -34,6 +34,7 @@ public class UmsMemberController {
     public int updateMemeber(@RequestBody UmsMember param) {
         return memeberService.updateMember(param);
     }
+
     @ApiOperation("获取验证码")
     @RequestMapping(value = "/getAuthCode", method = RequestMethod.GET)
     @ResponseBody

@@ -34,7 +34,7 @@ public class UmsMember implements Serializable {
     private Integer gender;
 
     @ApiModelProperty(value = "生日")
-    private Date birthday;
+    private String birthday;
 
     @ApiModelProperty(value = "所做城市")
     private String city;
@@ -142,11 +142,11 @@ public class UmsMember implements Serializable {
         this.gender = gender;
     }
 
-    public Date getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 

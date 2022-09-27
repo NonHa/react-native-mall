@@ -89,6 +89,6 @@ public class UmsMemberServiceImpl implements UmsMemeberService {
 
     @Override
     public int updateMember(UmsMember param) {
-        return 0;
+        return memberDao.updateMember(param);
     }
 }
