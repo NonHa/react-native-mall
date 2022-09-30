@@ -62,10 +62,11 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             String authToken = authHeader.substring(this.tokenHead.length());// The part after "Bearer "
 //            System.out.println("authToken==>"+authToken);
             String username = jwtTokenUtil.getUserNameFromToken(authToken);
-            Object userInfo = redisService.get(username);
 
+            Object userInfo = username != null ? redisService.get(username) : null;
+            System.out.println("userInfo"+userInfo);
             if (userInfo == null) {
-                throw new JwtException("token 过期");
+//                throw new JwtException("token 过期");
             }
             LOGGER.info("checking username:{}", username);
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

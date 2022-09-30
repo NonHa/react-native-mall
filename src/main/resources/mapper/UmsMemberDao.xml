@@ -9,6 +9,7 @@
     <resultMap id="BaseMap" type="com.non.my_mall.dto.UmsMemberParam" extends="com.non.my_mall.mbg.mapper.UmsMemberMapper.BaseResultMap">
         <result property="levelName"  column="levelName"></result>
         <association property="detail" resultMap="com.non.my_mall.mbg.mapper.UmsMemberStatisticsInfoMapper.BaseResultMap" columnPrefix="static_"></association>
+        <collection property="categoryList" resultMap="com.non.my_mall.mbg.mapper.PmsProductCategoryMapper.BaseResultMap" columnPrefix="cate_"></collection>
     </resultMap>
     <select id="getMember" resultMap="BaseMap">
         select u.*,
@@ -19,9 +20,13 @@
                s.return_order_count static_return_order_count,
                s.attend_count static_attend_count,
                s.fans_count static_fans_count,
-                l.`name` levelName
-        from ums_member u left join ums_member_statistics_info s on u.id = s.member_id
-        left join ums_member_level l on u.member_level_id = l.id
+                l.`name` levelName,
+                p.`name` cate_name
+        from ums_member u
+            left join ums_member_statistics_info s on u.id = s.member_id
+            left join  ums_member_level  l on u.member_level_id = l.id
+            left join ums_member_product_category_relation pc on u.id = pc.member_id
+            left join pms_product_category p on pc.product_category_id = p.id
         where  u.phone=#{phone}
     </select>
 
