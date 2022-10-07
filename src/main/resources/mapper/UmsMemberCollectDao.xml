@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.non.my_mall.dao.UmsMemberCollectDao">
+    <resultMap id="BaseResultMap" type="com.non.my_mall.dto.UmsMemberCollectDetail">
+        <result column="collect_product_id" jdbcType="BIGINT" property="collectProductId"></result>
+        <result column="collect_product_name" jdbcType="VARCHAR" property="collectProductName"></result>
+        <result column="collect_product_promotion_price" jdbcType="VARCHAR"  property="collectProductPromotionPrice"></result>
+        <result column="collect_subject_id" property="collectSubjectId"></result>
+        <result column="collect_subject_title" property="collectSubjectTitle"></result>
+        <result column="collect_subject_collect_count" property="collectSubjectCollectCount"></result>
+        <result column="collect_subject_read_count" property="collectSubjectReadCount"></result>
+        <result column="collect_subject_comment_count" property="collectSubjectCommentCount"></result>
+        <result column="collect_topic_id" property="collectTopicId"></result>
+        <result column="collect_topic_name" property="collectTopicName"></result>
+        <result column="collect_topic_read_count" property="collectTopicReadCount"></result>
+        <result column="collect_topic_attention_count" property="collectTopicAttentionCount"></result>
+        <result column="collect_topic_attend_count" property="collectTopicAttendCount"></result>
+
+    </resultMap>
+    <select id="getCollectProductByMemberId" parameterType="com.non.my_mall.dto.UmsMemberCollectParams" resultMap="BaseResultMap">
+
+            select
+            p.id collect_product_id,
+            p.name collect_product_name,
+            p.promotion_price collect_product_promotion_price
+            from ums_member_collect_relation m
+                     right join pms_product p on m.collect_product_id = p.id
+            where member_id = #{memberId}
+    </select>
+    <select id="getCollectSubjectByMemberId" parameterType="com.non.my_mall.dto.UmsMemberCollectParams" resultMap="BaseResultMap">
+
+        select
+        p.id collect_subject_id,
+        p.title collect_subject_title,
+        p.collect_count collect_subject_collect_count,
+        p.read_count collect_subject_read_count,
+        p.comment_count collect_subject_comment_count
+        from ums_member_collect_relation m
+                 right join cms_subject p on m.collect_subject_id = p.id
+        where member_id = #{memberId}
+    </select>
+    <select id="getCollectTopicByMemberId" parameterType="com.non.my_mall.dto.UmsMemberCollectParams" resultMap="BaseResultMap">
+
+        select
+        p.id collect_topic_id,
+        p.name collect_topic_name,
+        p.read_count collect_topic_read_count,
+        p.attention_count collect_topic_attention_count,
+        p.attend_count collect_topic_attend_count
+        from ums_member_collect_relation m
+                 right join cms_topic p on m.collect_topic_id = p.id
+        where member_id = #{memberId}
+    </select>
+</mapper>

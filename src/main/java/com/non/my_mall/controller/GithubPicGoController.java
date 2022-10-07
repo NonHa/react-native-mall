@@ -21,7 +21,7 @@ public class GithubPicGoController {
     @ResponseBody
     @RequestMapping(value = "/addPic", method = RequestMethod.POST)
     public CommonResult add(MultipartFile file) {
-
+        System.out.println("file"+file);
         // 获取文件原本的名字
         String originName = file.getOriginalFilename();
         // 判断文件是否是pdf文件

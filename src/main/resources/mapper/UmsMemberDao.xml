@@ -31,7 +31,8 @@
     </select>
 
     <update id="updateMember" parameterType="com.non.my_mall.mbg.model.UmsMember">
-        update ums_member set nickname=#{nickname},job=#{job},gender=#{gender},birthday=#{birthday},personalized_signature=#{personalizedSignature}
+        update ums_member set nickname=#{nickname},job=#{job},gender=#{gender},birthday=#{birthday},
+                              personalized_signature=#{personalizedSignature}, icon=#{icon}, city=#{city}
                            where id = #{id}
     </update>
 </mapper>
