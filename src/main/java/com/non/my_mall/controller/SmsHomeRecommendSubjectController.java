@@ -2,6 +2,7 @@ package com.non.my_mall.controller;
 
 import com.non.my_mall.common.api.CommonPage;
 import com.non.my_mall.dto.SmsHomeRecommendProductParams;
+import com.non.my_mall.dto.SmsHomeRecommendSubjectDetail;
 import com.non.my_mall.dto.SmsHomeRecommendSubjectParam;
 import com.non.my_mall.mbg.model.SmsHomeRecommendProduct;
 import com.non.my_mall.mbg.model.SmsHomeRecommendSubject;
@@ -63,5 +64,12 @@ public class SmsHomeRecommendSubjectController {
         } else {
             return "操作失败";
         }
+    }
+
+    @RequestMapping(value = "/detail",method = RequestMethod.GET)
+    @ResponseBody
+    public SmsHomeRecommendSubjectDetail getDetail(@RequestParam("id") Long id) {
+        SmsHomeRecommendSubjectDetail detailById = homeRecommendProducrtDao.getDetailById(id);
+        return detailById;
     }
 }

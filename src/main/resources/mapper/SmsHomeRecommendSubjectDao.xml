@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.non.my_mall.dao.SmsHomeRecommendSubjectDao">
+    <resultMap id="DetailResultMap" type="com.non.my_mall.dto.SmsHomeRecommendSubjectDetail" extends="com.non.my_mall.mbg.mapper.CmsSubjectMapper.BaseResultMap">
+        <collection property="productList" resultMap="com.non.my_mall.mbg.mapper.PmsProductMapper.BaseResultMap" columnPrefix="pro_"></collection>
+    </resultMap>
+    <select id="getDetailById" resultMap="DetailResultMap">
+        select *,
+               pp.name pro_name
+               from cms_subject s
+        left join cms_subject_product_relation sp on sp.subject_id = s.id
+        left join pms_product pp on pp.id = sp.product_id
+        where s.id = #{id}
+    </select>
+
     <select id="getList" parameterType="com.non.my_mall.dto.SmsHomeRecommendSubjectParam" resultMap="com.non.my_mall.mbg.mapper.SmsHomeRecommendSubjectMapper.BaseResultMap">
         select * from sms_home_recommend_subject
         <where>
@@ -59,4 +71,6 @@
              </if>
         </where>
     </select>
+
+
 </mapper>

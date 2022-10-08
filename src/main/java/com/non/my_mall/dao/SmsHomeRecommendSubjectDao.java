@@ -1,6 +1,7 @@
 package com.non.my_mall.dao;
 
 import com.non.my_mall.dto.SmsHomeNewProductParam;
+import com.non.my_mall.dto.SmsHomeRecommendSubjectDetail;
 import com.non.my_mall.dto.SmsHomeRecommendSubjectParam;
 import com.non.my_mall.mbg.model.SmsHomeNewProduct;
 import com.non.my_mall.mbg.model.SmsHomeRecommendSubject;
@@ -13,5 +14,5 @@ public interface SmsHomeRecommendSubjectDao {
     int update(SmsHomeRecommendSubject param);
     int insert(List<SmsHomeRecommendSubject> param);
     List<SmsHomeRecommendSubject> getInfoList(SmsHomeRecommendSubjectParam param);
-
+    SmsHomeRecommendSubjectDetail getDetailById(Long id);
 }

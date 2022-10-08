@@ -1,5 +1,6 @@
 package com.non.my_mall.service;
 
+import com.non.my_mall.dto.SmsHomeRecommendSubjectDetail;
 import com.non.my_mall.dto.SmsHomeRecommendSubjectParam;
 import com.non.my_mall.mbg.model.CmsSubjectCategory;
 import com.non.my_mall.mbg.model.SmsHomeRecommendSubject;
@@ -32,5 +33,11 @@ public class CmsSubjectCategoryTest {
         param.setCategoryId(2);
         List<SmsHomeRecommendSubject> infoList = homeRecommendSubjectService.getInfoList(param);
         LOGGER.info("list=： {}", infoList);
+    }
+    @Test
+    public void getHomeRecommendSubjectDetail() {
+
+        SmsHomeRecommendSubjectDetail detailById = homeRecommendSubjectService.getDetailById(1L);
+        LOGGER.info("list=： {}", detailById);
     }
 }

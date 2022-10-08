@@ -2,6 +2,7 @@ package com.non.my_mall.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.non.my_mall.dao.SmsHomeRecommendSubjectDao;
+import com.non.my_mall.dto.SmsHomeRecommendSubjectDetail;
 import com.non.my_mall.dto.SmsHomeRecommendSubjectParam;
 import com.non.my_mall.mbg.model.SmsHomeRecommendSubject;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,11 @@ public class SmsHomeRecommendSubjectServiceImpl implements SmsHomeRecommendSubje
     @Override
     public List<SmsHomeRecommendSubject> getInfoList(SmsHomeRecommendSubjectParam param) {
         PageHelper.startPage(param.getPage(),param.getPageSize());
-
         return homeRecommendSubjectDao.getInfoList(param);
+    }
+
+    @Override
+    public SmsHomeRecommendSubjectDetail getDetailById(Long id) {
+        return homeRecommendSubjectDao.getDetailById(id);
     }
 }
