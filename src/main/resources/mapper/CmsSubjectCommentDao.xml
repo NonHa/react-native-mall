@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.non.my_mall.dao.CmsSubjectCommentDao">
+    <resultMap id="CommentResultMap" type="com.non.my_mall.dto.CmsSubjectCommentDetail" extends="com.non.my_mall.mbg.mapper.CmsSubjectCommentMapper.BaseResultMap">
+        <result property="memberCity" column="member_city"></result>
+        <result property="memberIcon" column="member_icon"></result>
+    </resultMap>
+    <select id="getCommentById" resultMap="CommentResultMap">
+        select *,
+               m.city member_city,
+               m.icon member_icon
+               from cms_subject_comment s
+        left join ums_member m on s.member_nick_name = m.nickname
+        where subject_id = #{id} order by s.create_time desc
+    </select>
+
+    <insert id="createComment" parameterType="com.non.my_mall.mbg.model.CmsSubjectComment">
+        insert into cms_subject_comment (subject_id, member_nick_name,content,create_time,show_status) value (
+            #{subjectId}, #{memberNickName}, #{content}, #{createTime}, #{showStatus}
+        )
+    </insert>
+</mapper>

@@ -1,8 +1,11 @@
 package com.non.my_mall.service;
 
+import com.non.my_mall.dto.CmsSubjectCommentDetail;
+import com.non.my_mall.dto.CmsSubjectCommentParams;
 import com.non.my_mall.dto.SmsHomeRecommendSubjectDetail;
 import com.non.my_mall.dto.SmsHomeRecommendSubjectParam;
 import com.non.my_mall.mbg.model.CmsSubjectCategory;
+import com.non.my_mall.mbg.model.CmsSubjectComment;
 import com.non.my_mall.mbg.model.SmsHomeRecommendSubject;
 import com.non.my_mall.service.impl.CmsSubjectCategoryServiceImpl;
 import com.non.my_mall.service.impl.SmsHomeRecommendSubjectServiceImpl;
@@ -21,6 +24,9 @@ public class CmsSubjectCategoryTest {
     private CmsSubjectCategoryServiceImpl subjectCategoryService;
     @Autowired
     private SmsHomeRecommendSubjectServiceImpl homeRecommendSubjectService;
+
+    @Autowired
+    private CmsSubjectCommentService subjectCommentService;
     @Test
     public void getCategoryList() {
         List<CmsSubjectCategory> list = subjectCategoryService.getList();
@@ -39,5 +45,15 @@ public class CmsSubjectCategoryTest {
 
         SmsHomeRecommendSubjectDetail detailById = homeRecommendSubjectService.getDetailById(1L);
         LOGGER.info("list=： {}", detailById);
+    }
+
+    @Test
+    public void getsubjectCommentService() {
+        CmsSubjectCommentParams cmsSubjectCommentParams = new CmsSubjectCommentParams();
+        cmsSubjectCommentParams.setId(1L);
+        cmsSubjectCommentParams.setPageSize(5);
+        cmsSubjectCommentParams.setPage(1);
+        List<CmsSubjectCommentDetail> commentById = subjectCommentService.getCommentById(cmsSubjectCommentParams);
+        LOGGER.info("list=： {}", commentById);
     }
 }
