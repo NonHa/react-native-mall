@@ -2,7 +2,9 @@ package com.non.my_mall.controller;
 
 import com.non.my_mall.common.api.CommonPage;
 import com.non.my_mall.common.api.CommonResult;
+import com.non.my_mall.dto.PmsProdcutInfoDetail;
 import com.non.my_mall.dto.PmsProductQueryParam;
+import com.non.my_mall.mbg.model.PmsComment;
 import com.non.my_mall.mbg.model.PmsProduct;
 import com.non.my_mall.service.PmsProductService;
 import io.swagger.annotations.Api;
@@ -49,5 +51,23 @@ public class PmsProductController {
         } else {
             return CommonResult.failed();
         }
+    }
+
+    @ApiOperation("获取商品详情")
+    @RequestMapping(value = "/info", method = RequestMethod.GET)
+    @ResponseBody
+    public PmsProdcutInfoDetail getList(@RequestParam Long id ) {
+
+        PmsProdcutInfoDetail list = productService.getProductById(id);
+        return list;
+    }
+
+    @ApiOperation("获取商品评论")
+    @RequestMapping(value = "/comment", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonPage<PmsComment> getComment(@RequestParam(value = "id") Long id ,@RequestParam(value = "pageNum") Integer pageNum ,@RequestParam(value = "pageSize") Integer pageSize ) {
+
+        List<PmsComment> commentById = productService.getCommentById(id,pageNum,pageSize);
+        return CommonPage.restPage(commentById);
     }
 }

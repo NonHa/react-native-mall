@@ -4,4 +4,36 @@
     <select id="getSimpleList" resultMap="com.non.my_mall.mbg.mapper.PmsProductMapper.BaseResultMap">
         select * from pms_product where name like concat("%", #{keyword},"%")
     </select>
+
+    <resultMap id="InfoResultMap" type="com.non.my_mall.dto.PmsProdcutInfoDetail" extends="com.non.my_mall.mbg.mapper.PmsProductMapper.BaseResultMap">
+<!--        <result column="commentCount" property="commentCount"/>-->
+        <association property="comment" resultMap="com.non.my_mall.mbg.mapper.PmsCommentMapper.BaseResultMap" columnPrefix="com_"></association>
+        <association property="brandInfo" resultMap="com.non.my_mall.mbg.mapper.PmsBrandMapper.BaseResultMap" columnPrefix="b_"></association>
+        <collection property="recommendList" resultMap="com.non.my_mall.mbg.mapper.PmsProductMapper.BaseResultMap" columnPrefix="re_"></collection>
+
+    </resultMap>
+    <select id="getProductById" resultMap="InfoResultMap">
+        select *,
+
+               ppc.id re_id,
+               ppc.name re_name,
+               ppc.sub_title re_sub_title,
+               ppc.price re_price,
+               b.id b_id,
+               b.logo b_logo,
+               b.product_count b_product_count
+
+               from pms_product  p
+
+        left join  (
+                   SELECT  pp.*
+                   FROM  pms_product pp where pp.id != #{id}
+                   GROUP  BY  pp.id limit 0,5) ppc on p.product_category_name = ppc.product_category_name
+        left join pms_brand b on b.name = p.brand_name
+        where p.id = #{id}
+    </select>
+
+    <select id="getCommentById" resultMap="com.non.my_mall.mbg.mapper.PmsCommentMapper.BaseResultMap">
+        select * from pms_comment where product_id = #{id}
+    </select>
 </mapper>

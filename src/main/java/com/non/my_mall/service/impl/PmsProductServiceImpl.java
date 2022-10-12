@@ -2,8 +2,10 @@ package com.non.my_mall.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.non.my_mall.dao.PmsProductDao;
+import com.non.my_mall.dto.PmsProdcutInfoDetail;
 import com.non.my_mall.dto.PmsProductQueryParam;
 import com.non.my_mall.mbg.mapper.PmsProductMapper;
+import com.non.my_mall.mbg.model.PmsComment;
 import com.non.my_mall.mbg.model.PmsProduct;
 import com.non.my_mall.mbg.model.PmsProductExample;
 import com.non.my_mall.service.PmsProductService;
@@ -62,5 +64,21 @@ public class PmsProductServiceImpl implements PmsProductService {
         PmsProductExample example = new PmsProductExample();
         example.createCriteria().andIdIn(ids);
         return productMapper.updateByExampleSelective(record, example);
+    }
+
+    @Override
+    public PmsProdcutInfoDetail getProductById(Long id) {
+        PmsProdcutInfoDetail productById = productDao.getProductById(id);
+        List<PmsComment> commentById = productDao.getCommentById(id);
+        productById.setCommentCount(commentById.size());
+        productById.setComment(commentById.get(0));
+        return productById;
+    }
+
+    @Override
+    public List<PmsComment> getCommentById(Long id, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+
+        return productDao.getCommentById(id);
     }
 }
