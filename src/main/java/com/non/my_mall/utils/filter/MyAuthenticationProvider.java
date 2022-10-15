@@ -10,10 +10,12 @@ import org.springframework.security.authentication.InternalAuthenticationService
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
@@ -71,8 +73,10 @@ public class MyAuthenticationProvider extends AbstractUserDetailsAuthenticationP
 
                 //如果不为null则与userDetailsService匹配，配对成功则使用该userDetailsService的loadUserByUsername
                 if (Objects.nonNull(platform) && userDetailsService.supports(platform)) {
-                    System.out.println("userDetailsService==>"+userDetailsService);
+
                     loadedUser = (SecurityUser) userDetailsService.loadUserByUsername(username);
+                    UsernamePasswordAuthenticationToken authentication2 = new UsernamePasswordAuthenticationToken(loadedUser, null, null);
+                    SecurityContextHolder.getContext().setAuthentication(authentication2);
 
                     System.out.println("loadedUser==>"+loadedUser);
                     break;

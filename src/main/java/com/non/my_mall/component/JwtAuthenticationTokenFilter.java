@@ -1,5 +1,6 @@
 package com.non.my_mall.component;
 
+import com.non.my_mall.dto.SecurityUser;
 import com.non.my_mall.service.CustomUserDetailService;
 import com.non.my_mall.service.impl.RedisServiceImpl;
 import com.non.my_mall.utils.JwtTokenUtil;
@@ -23,6 +24,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * JWT登录授权过滤器
@@ -32,6 +35,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticationTokenFilter.class);
     @Autowired
     private UserDetailsService userDetailsService;
+
+
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
@@ -42,11 +47,10 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Qualifier("adminUserDetailService")
     private CustomUserDetailService adminUserDetailService;
 
-    //注入我们自定义的前台的UserDetailService
-
     @Autowired
     @Qualifier("appUserDetailService")
     private CustomUserDetailService appUserDetailService;
+
     @Value("${jwt.tokenHeader}")
     private String tokenHeader;
     @Value("${jwt.tokenHead}")
@@ -57,32 +61,46 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain chain) throws ServletException, IOException {
         String authHeader = request.getHeader(this.tokenHeader);
-        System.out.println("authHeader==>"+authHeader);
+
         if (authHeader != null && authHeader.startsWith(this.tokenHead)) {
             String authToken = authHeader.substring(this.tokenHead.length());// The part after "Bearer "
 //            System.out.println("authToken==>"+authToken);
             String username = jwtTokenUtil.getUserNameFromToken(authToken);
 
             Object userInfo = username != null ? redisService.get(username) : null;
-            System.out.println("userInfo"+userInfo);
+
             if (userInfo == null) {
 //                throw new JwtException("token 过期");
             }
             LOGGER.info("checking username:{}", username);
+
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-//                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-//                if (jwtTokenUtil.validateToken(authToken, userDetails)) {
-//                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-//                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-//                    LOGGER.info("authenticated user:{}", username);
-//                    SecurityContextHolder.getContext().setAuthentication(authentication);
-//                }
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null, null);
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                LOGGER.info("authenticated user:{}", username);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                for (CustomUserDetailService customUserDetailService : getCustomUserDetailServiceList()) {
+
+                    if (customUserDetailService.supports(( String) redisService.get("platform"))) {
+                        SecurityUser userDetails = (SecurityUser) customUserDetailService.loadUserByUsername(username);
+
+                        if (jwtTokenUtil.validateToken(authToken, userDetails)) {
+                            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                            LOGGER.info("authenticated user:{}", username);
+                            SecurityContextHolder.getContext().setAuthentication(authentication);
+                        }
+                    }
+
+                }
+
+
+
             }
         }
         chain.doFilter(request, response);
+    }
+
+    private List<CustomUserDetailService> getCustomUserDetailServiceList() {
+        ArrayList<CustomUserDetailService> objects = new ArrayList<>();
+        objects.add(adminUserDetailService);
+        objects.add(appUserDetailService);
+        return objects;
     }
 }

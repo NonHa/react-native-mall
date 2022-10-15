@@ -40,10 +40,12 @@ public class AppUserDetailService implements CustomUserDetailService {
             UmsMember item = member.get(0);
             umsAdmin.setUsername(item.getPhone());
             umsAdmin.setPassword(item.getPassword());
+            umsAdmin.setId(item.getId());
+
             SecurityUser securityUser = new SecurityUser(umsAdmin);
             String token = jwtTokenUtil.generateToken(securityUser);
             redisService.set(item.getPhone(), token);
-            redisService.set("platform", "App");
+            redisService.set("platform", PLAT_FORM);
             securityUser.setToken(token);
             return securityUser;
 

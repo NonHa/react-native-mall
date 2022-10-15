@@ -73,7 +73,7 @@ public class MyAuthenticationFilter extends AbstractAuthenticationProcessingFilt
             if (password == null) {
                 password = "";
             }
-            System.out.println("request.getParameter==>"+ request.getParameter("platform"));
+//            System.out.println("request.getParameter==>"+ request.getParameter("platform"));
             username = username.trim();
 
             UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(

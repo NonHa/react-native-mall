@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 @Service("adminUserDetailService")
 @Primary
 public class AdminUserDetailService implements CustomUserDetailService {
-    private final String PLAT_FORM = "admin";
+    private final String PLAT_FORM = "Admin";
 
     @Autowired
     private UmsAdminService adminService;
@@ -45,7 +45,7 @@ public class AdminUserDetailService implements CustomUserDetailService {
             securityUser.setToken(token);
 
             redisService.set(adminByUsername.getUsername(), token);
-            redisService.set("platform", "admin");
+            redisService.set("platform", PLAT_FORM);
             return securityUser;
         }
         throw new UsernameNotFoundException("用户名或密码错误");

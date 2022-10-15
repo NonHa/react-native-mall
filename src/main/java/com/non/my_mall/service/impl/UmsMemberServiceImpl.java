@@ -3,13 +3,18 @@ package com.non.my_mall.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.non.my_mall.common.api.CommonResult;
 import com.non.my_mall.dao.UmsMemberDao;
+import com.non.my_mall.dto.SecurityUser;
 import com.non.my_mall.mbg.mapper.UmsMemberMapper;
+import com.non.my_mall.mbg.model.UmsAdmin;
 import com.non.my_mall.mbg.model.UmsMember;
 import com.non.my_mall.mbg.model.UmsMemberExample;
 import com.non.my_mall.service.RedisService;
 import com.non.my_mall.service.UmsMemeberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -90,5 +95,14 @@ public class UmsMemberServiceImpl implements UmsMemeberService {
     @Override
     public int updateMember(UmsMember param) {
         return memberDao.updateMember(param);
+    }
+
+    @Override
+    public UmsAdmin getCurrentMember() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+        SecurityUser principal = (SecurityUser) authentication.getPrincipal();
+        System.out.println("principal"+principal);
+        return principal.getCurrentUserInfo();
     }
 }
