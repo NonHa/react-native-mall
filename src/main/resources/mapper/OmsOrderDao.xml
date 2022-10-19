@@ -29,4 +29,46 @@
     <update id="delete">
         update oms_order set delete_status = 1 where id = #{id}
     </update>
+
+    <insert id="generate" parameterType="com.non.my_mall.mbg.model.OmsOrder">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into oms_order (
+            member_id,
+            order_sn,
+            coupon_id,
+            create_time,
+            member_username,
+            total_amount,
+            pay_type,
+            source_type,
+            status,
+            order_type,
+            auto_confirm_day,
+            integration,
+            growth,
+            promotion_info,
+            receiver_name,
+            receiver_phone
+
+        ) value (
+            #{memberId},
+            #{orderSn},
+            #{couponId},
+            #{createTime},
+            #{memberUsername},
+            #{totalAmount},
+            #{payType},
+            #{sourceType},
+            #{status},
+            #{orderType},
+            #{autoConfirmDay},
+            #{integration},
+            #{growth},
+            #{promotionInfo},
+            #{receiverName},
+            #{receiverPhone}
+        )
+    </insert>
 </mapper>

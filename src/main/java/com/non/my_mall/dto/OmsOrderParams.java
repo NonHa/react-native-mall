@@ -26,4 +26,5 @@ public class OmsOrderParams extends PageParams{
 
     @ApiModelProperty(value = "提交时间")
     private Date createTime;
+
 }

@@ -54,6 +54,7 @@ redis:
   database: mall
   key:
     admin: 'ums:admin'
+    orderId: 'oms:orderId'
     resourceList: 'ums:resourceList'
     prefix:
       authCode: 'non'

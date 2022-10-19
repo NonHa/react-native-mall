@@ -30,7 +30,8 @@
                ss.stock ss_stock,
                ss.pic ss_pic,
                ss.price ss_price,
-               ss.sp_data ss_sp_data
+               ss.sp_data ss_sp_data,
+               ss.sku_code ss_sku_code
                from pms_product  p
 
         left join  (
@@ -45,5 +46,33 @@
 
     <select id="getCommentById" resultMap="com.non.my_mall.mbg.mapper.PmsCommentMapper.BaseResultMap">
         select * from pms_comment where product_id = #{id}
+    </select>
+
+    <resultMap id="PromotionResultMap" type="com.non.my_mall.dto.PromotionProduct" extends="com.non.my_mall.mbg.mapper.PmsProductMapper.BaseResultMap">
+        <collection property="skuStockList" resultMap="com.non.my_mall.mbg.mapper.PmsSkuStockMapper.BaseResultMap" columnPrefix="sku_"></collection>
+        <collection property="productLadderList" resultMap="com.non.my_mall.mbg.mapper.PmsProductLadderMapper.BaseResultMap" columnPrefix="ladder_"></collection>
+        <collection property="productFullReductionList" resultMap="com.non.my_mall.mbg.mapper.PmsProductFullReductionMapper.BaseResultMap" columnPrefix="full_"></collection>
+    </resultMap>
+    <select id="getPromotionList" resultMap="PromotionResultMap">
+        select p.*,
+        sku.id sku_id,
+        sku.price sku_price,
+        sku.sku_code sku_sku_code,
+        sku.promotion_price sku_promotion_price,
+        sku.stock sku_stock,
+        sku.lock_stock sku_lock_stock,
+        ladder.id ladder_id,
+        ladder.count ladder_count,
+        ladder.discount ladder_discount,
+        full_re.id full_id,
+        full_re.full_price full_full_price,
+        full_re.reduce_price full_reduce_price
+        from pms_product p
+        left join pms_sku_stock sku on p.id = sku.product_id
+        left join pms_product_full_reduction full_re on p.id = full_re.product_id
+        left join pms_product_ladder ladder on p.id = ladder.product_id
+        where p.id in  <foreach collection="ids" open="(" close=")" item="id" separator=",">
+        #{id}
+    </foreach>
     </select>
 </mapper>

@@ -15,6 +15,12 @@
                 <if test="price != null">
                     price=#{price},
                 </if>
+                <if test="productSkuCode != null">
+                    product_sku_code=#{productSkuCode},
+                </if>
+                <if test="productAttr != null">
+                    product_attr=#{productAttr},
+                </if>
 
                 <if test="createDate != null">
                     create_date=#{createDate},
@@ -25,4 +31,25 @@
             </set>
             where  id=#{id}
     </update>
+
+    <resultMap id="ListResultMap" type="com.non.my_mall.dto.OmsCarItemListDetail" extends="com.non.my_mall.mbg.mapper.OmsCartItemMapper.BaseResultMap">
+        <collection property="productList" columnPrefix="pro_" resultMap="com.non.my_mall.mbg.mapper.OmsCartItemMapper.BaseResultMap"></collection>
+    </resultMap>
+    <select id="getList" resultMap="ListResultMap">
+        select
+               c1.*,
+               c2.id pro_id,
+               c2.product_id pro_product_id,
+               c2.product_sku_id pro_product_sku_id,
+               c2.quantity pro_quantity,
+               c2.price pro_price,
+               c2.product_name pro_product_name,
+               c2.product_id pro_product_id,
+               c2.product_sub_title pro_product_sub_title,
+               c2.product_attr pro_product_attr,
+               c2.product_pic pro_product_pic
+        from (select * from oms_cart_item c group by c.product_brand)  c1
+        left join oms_cart_item c2 on c1.product_brand = c2.product_brand
+        where c1.member_id = #{memberId}
+    </select>
 </mapper>

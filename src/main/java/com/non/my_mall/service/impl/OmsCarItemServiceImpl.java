@@ -1,19 +1,25 @@
 package com.non.my_mall.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import com.non.my_mall.dao.OmsCarItemDao;
+import com.non.my_mall.domain.CartPromotionItem;
 import com.non.my_mall.dto.SecurityUser;
 import com.non.my_mall.mbg.mapper.OmsCartItemMapper;
 import com.non.my_mall.mbg.model.OmsCartItem;
 import com.non.my_mall.mbg.model.OmsCartItemExample;
 import com.non.my_mall.mbg.model.UmsAdmin;
 import com.non.my_mall.service.OmsCarItemService;
+import com.non.my_mall.service.OmsPromotionService;
 import com.non.my_mall.service.UmsMemeberService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OmsCarItemServiceImpl implements OmsCarItemService {
@@ -24,6 +30,15 @@ public class OmsCarItemServiceImpl implements OmsCarItemService {
 
     @Resource
     private UmsMemeberService memeberService;
+
+    @Resource
+    private OmsPromotionService promotionService;
+    @Override
+    public List<OmsCartItem> getList() {
+        UmsAdmin currentMember = memeberService.getCurrentMember();
+        return carItemDao.getList(currentMember.getId());
+    }
+
     @Override
     public int add(OmsCartItem params) {
         UmsAdmin currentMember = memeberService.getCurrentMember();
@@ -36,6 +51,7 @@ public class OmsCarItemServiceImpl implements OmsCarItemService {
             return carItemDao.add(params);
         } else {
             carItem.setModifyDate(new Date());
+            carItem.setProductAttr(params.getProductAttr());
             carItem.setQuantity(carItem.getQuantity()+params.getQuantity());
             return carItemDao.update(carItem);
         }
@@ -60,4 +76,16 @@ public class OmsCarItemServiceImpl implements OmsCarItemService {
         return null;
     }
 
+    @Override
+    public List<CartPromotionItem> listPromotion(Long memberId, List<Long> carIds) {
+        List<OmsCartItem> list = getList();
+        if (CollUtil.isNotEmpty(carIds)) {
+            list = list.stream().filter(item -> carIds.contains(item.getId())).collect(Collectors.toList());
+        }
+         List<CartPromotionItem> promotionItems = new ArrayList<>();
+        if (!CollectionUtil.isEmpty(list)) {
+            promotionItems = promotionService.calcCartPromotion(list);
+        }
+        return promotionItems;
+    }
 }

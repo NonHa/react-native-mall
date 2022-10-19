@@ -1,6 +1,7 @@
 package com.non.my_mall.dao;
 
 import com.non.my_mall.dto.PmsProdcutInfoDetail;
+import com.non.my_mall.dto.PromotionProduct;
 import com.non.my_mall.mbg.model.PmsComment;
 import com.non.my_mall.mbg.model.PmsProduct;
 
@@ -10,5 +11,5 @@ public interface PmsProductDao {
     List<PmsProduct> getSimpleList(String keyword);
     PmsProdcutInfoDetail getProductById(Long id);
     List<PmsComment> getCommentById(Long id);
-
+    List<PromotionProduct> getPromotionList(List<Long> ids);
 }

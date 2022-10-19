@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+
 @Controller
 @Api(tags = "购物车")
 @RequestMapping("/shopping/car")
@@ -23,5 +25,13 @@ public class OmsCarItemController {
     @ResponseBody
     public int addItem(@RequestBody OmsCartItem params) {
         return carItemService.add(params);
+    }
+
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @ApiOperation(value = "用户购物车")
+    @ResponseBody
+    public List<OmsCartItem> getList() {
+        List<OmsCartItem> list = carItemService.getList();
+        return list;
     }
 }

@@ -2,6 +2,7 @@ package com.non.my_mall.controller;
 
 import com.non.my_mall.common.api.CommonPage;
 import com.non.my_mall.common.api.CommonResult;
+import com.non.my_mall.dto.OmsGenerateOrderParam;
 import com.non.my_mall.dto.OmsOrderParams;
 import com.non.my_mall.mbg.model.OmsOrder;
 import com.non.my_mall.service.OmsOrderService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Api(tags = "OmsOrderController", description = "订单管理")
@@ -43,5 +45,14 @@ public class OmsOrderController {
             return CommonResult.failed("操作失败");
         }
 
+    }
+
+    @ApiOperation("新增订单")
+    @RequestMapping(value = "/generate", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult generateOrder(@RequestBody OmsGenerateOrderParam param) {
+
+        Map<String, Object> generate = orderService.generate(param);
+        return CommonResult.success(generate, "生成订单成功");
     }
 }
