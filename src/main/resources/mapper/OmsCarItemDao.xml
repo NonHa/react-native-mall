@@ -2,8 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.non.my_mall.dao.OmsCarItemDao">
     <insert id="add" parameterType="com.non.my_mall.mbg.model.OmsCartItem">
-        insert into oms_cart_item (quantity, price,product_id,product_name,member_id, create_date,modify_date, product_sku_id) value
-            (#{quantity}, #{price}, #{productId},#{productName},#{memberId},#{createDate},#{modifyDate}, #{productSkuId})
+        insert into oms_cart_item (quantity, price,product_id,product_name,member_id, create_date,modify_date, product_sku_id,
+                                   product_sub_title,product_sn,product_sku_code,product_category_id,product_attr,product_brand
+                                   ) value
+            (#{quantity}, #{price}, #{productId},#{productName},#{memberId},#{createDate},#{modifyDate}, #{productSkuId},
+            #{productSubTitle}, #{productSn}, #{productSkuCode}, #{productCategoryId}, #{productAttr}, #{productBrand}
+            )
     </insert>
 
     <update id="update" parameterType="com.non.my_mall.mbg.model.OmsCartItem">

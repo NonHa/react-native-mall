@@ -25,7 +25,7 @@ public class OmsPromotionServiceImpl implements OmsPromotionService {
     public List<CartPromotionItem> calcCartPromotion(List<OmsCartItem> cartItemList) {
         //1.先根据productId对CartItem进行分组，以spu为单位进行计算优惠
         Map<Long, List<OmsCartItem>> longListMap = groupCarItemByCpu(cartItemList);
-        System.out.println("longListMap"+longListMap.entrySet().size());
+
         //2.查询所有商品的优惠相关信息
         List<PromotionProduct> promotionProductList = getPromotionProductList(cartItemList);
         //3.根据商品促销类型计算商品促销优惠价格
