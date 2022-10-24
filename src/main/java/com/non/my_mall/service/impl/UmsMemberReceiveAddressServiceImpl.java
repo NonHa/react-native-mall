@@ -19,11 +19,12 @@ public class UmsMemberReceiveAddressServiceImpl implements UmsMemberReceiveAddre
     @Override
     public List<UmsMemberReceiveAddress> getCurrentMemberAddressList() {
         UmsAdmin currentMember = memeberService.getCurrentMember();
-        return memberReceiveAddressDao.getCurrentMemberAddressList(currentMember.getId());
+        return memberReceiveAddressDao.getCurrentMemberAddressList(currentMember.getId(), null);
     }
 
     @Override
     public int addAddress(UmsMemberReceiveAddress param) {
+
         UmsAdmin currentMember = memeberService.getCurrentMember();
         param.setMemberId(currentMember.getId());
         Integer defaultStatus = param.getDefaultStatus();
@@ -39,6 +40,18 @@ public class UmsMemberReceiveAddressServiceImpl implements UmsMemberReceiveAddre
             }
 
         }
+        if (param.getId() != null) {
+            return  memberReceiveAddressDao.updateAddressById(param);
+        }
         return memberReceiveAddressDao.addAddress(param);
+    }
+
+    @Override
+    public UmsMemberReceiveAddress getItem(Long id) {
+        List<UmsMemberReceiveAddress> currentMemberAddressList = memberReceiveAddressDao.getCurrentMemberAddressList(null, id);
+        if (currentMemberAddressList.size() > 0) {
+            return currentMemberAddressList.get(0);
+        }
+        return null;
     }
 }

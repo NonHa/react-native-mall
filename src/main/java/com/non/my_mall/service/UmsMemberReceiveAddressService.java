@@ -7,4 +7,5 @@ import java.util.List;
 public interface UmsMemberReceiveAddressService {
     List<UmsMemberReceiveAddress> getCurrentMemberAddressList();
     int addAddress(UmsMemberReceiveAddress param);
+    UmsMemberReceiveAddress getItem(Long id);
 }

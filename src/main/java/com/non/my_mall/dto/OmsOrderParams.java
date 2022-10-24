@@ -18,6 +18,8 @@ public class OmsOrderParams extends PageParams{
     @ApiModelProperty(value = "订单状态：0->待付款；1->待发货；2->已发货；3->已完成；4->已关闭；5->无效订单")
     private Integer status;
 
+    @ApiModelProperty(value = "确认收货状态：0->未确认；1->已确认")
+    private Integer confirmStatus;
     @ApiModelProperty(value = "订单类型：0->正常订单；1->秒杀订单")
     private Integer orderType;
 
@@ -26,5 +28,8 @@ public class OmsOrderParams extends PageParams{
 
     @ApiModelProperty(value = "提交时间")
     private Date createTime;
+
+    @ApiModelProperty(value = "客户id")
+    private Long memberId;
 
 }

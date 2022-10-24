@@ -7,7 +7,7 @@
     product_sn, product_price, product_quantity,
     product_sku_id, product_category_id, product_sku_code,promotion_name,
     promotion_amount, coupon_amount, integration_amount,
-    real_amount,product_attr) values
+    real_amount,product_attr,pay_status) values
     <foreach collection="list" item="item" separator="," index="index">
         (#{item.orderId,jdbcType=BIGINT}, #{item.orderSn,jdbcType=VARCHAR}, #{item.productId,jdbcType=BIGINT},
         #{item.productPic,jdbcType=VARCHAR}, #{item.productName,jdbcType=VARCHAR}, #{item.productBrand,jdbcType=VARCHAR},
@@ -16,7 +16,22 @@
         #{item.promotionName,jdbcType=VARCHAR},
         #{item.promotionAmount,jdbcType=DECIMAL}, #{item.couponAmount,jdbcType=DECIMAL},
         #{item.integrationAmount,jdbcType=DECIMAL},
-        #{item.realAmount,jdbcType=DECIMAL},#{item.productAttr,jdbcType=VARCHAR})
+        #{item.realAmount,jdbcType=DECIMAL},#{item.productAttr,jdbcType=VARCHAR},#{item.payStatus,jdbcType=VARCHAR})
     </foreach>
     </insert>
+
+    <update id="update" parameterType="com.non.my_mall.mbg.model.OmsOrderItem">
+        update oms_order_item
+        <set>
+
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="paymentTime != null">
+                payment_time=#{paymentTime}
+            </if>
+
+        </set>
+        where  id=#{id}
+    </update>
 </mapper>

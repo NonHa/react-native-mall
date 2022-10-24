@@ -3,6 +3,7 @@ package com.non.my_mall.mbg.model;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class OmsOrderItem implements Serializable {
     private Long id;
@@ -22,13 +23,15 @@ public class OmsOrderItem implements Serializable {
     private String productBrand;
 
     private String productSn;
+    private Date paymentTime;
 
     @ApiModelProperty(value = "销售价格")
     private BigDecimal productPrice;
 
     @ApiModelProperty(value = "购买数量")
     private Integer productQuantity;
-
+    @ApiModelProperty(value = "支付状态")
+    private Integer status;
     @ApiModelProperty(value = "商品sku编号")
     private Long productSkuId;
 
@@ -69,7 +72,19 @@ public class OmsOrderItem implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+    public Integer getStatus() {
+        return status;
+    }
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
+    public Date getPaymentTime() {
+        return paymentTime;
+    }
+    public void setPaymentTime(Date paymentTime) {
+        this.paymentTime = paymentTime;
+    }
     public Long getOrderId() {
         return orderId;
     }

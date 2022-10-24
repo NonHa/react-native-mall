@@ -26,6 +26,38 @@
         </if>
     </select>
 
+    <resultMap id="OrderResultMap" type="com.non.my_mall.dto.OmsOrderDetail" extends="com.non.my_mall.mbg.mapper.OmsOrderMapper.BaseResultMap">
+        <collection property="orderItemList" resultMap="com.non.my_mall.mbg.mapper.OmsOrderItemMapper.BaseResultMap" columnPrefix="oi_"></collection>
+    </resultMap>
+    <select id="getMember" parameterType="com.non.my_mall.dto.OmsOrderParams" resultMap="OrderResultMap">
+        select
+         o.*,
+         oi.id oi_id,
+         oi.order_id oi_order_id,
+         oi.order_sn oi_order_sn,
+         oi.product_id oi_product_id,
+         oi.product_pic oi_product_pic,
+         oi.product_name oi_product_name,
+         oi.product_brand oi_product_brand,
+         oi.product_price oi_product_price,
+         oi.product_quantity oi_product_quantity,
+         oi.product_sku_id oi_product_sku_id,
+         oi.product_sku_code oi_product_sku_code,
+         oi.product_category_id oi_product_category_id,
+         oi.product_attr oi_product_attr
+         from oms_order o left join oms_order_item oi on o.id = oi.order_id
+                        <if test="status != null">
+                            and oi.status = #{status}
+                        </if>
+
+        <where>
+            <if test="memberId != null">
+                o.member_id = #{memberId}
+            </if>
+
+        </where>
+
+    </select>
     <update id="delete">
         update oms_order set delete_status = 1 where id = #{id}
     </update>
@@ -50,7 +82,11 @@
             growth,
             promotion_info,
             receiver_name,
-            receiver_phone
+            receiver_phone,
+        receiver_province,
+        receiver_city,
+        receiver_region,
+        receiver_detail_address
 
         ) value (
             #{memberId},
@@ -68,7 +104,11 @@
             #{growth},
             #{promotionInfo},
             #{receiverName},
-            #{receiverPhone}
+            #{receiverPhone},
+            #{receiverProvince},
+            #{receiverCity},
+            #{receiverRegion},
+            #{receiverDetailAddress}
         )
     </insert>
 </mapper>

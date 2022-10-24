@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.non.my_mall.dao.PmsCommentDao">
+    <insert id="addComment" parameterType="com.non.my_mall.mbg.model.PmsComment">
+        insert into pms_comment (
+            product_id,member_nick_name,product_name,
+            star,create_time,show_status,product_attribute,
+            collect_couont,read_count,content,replay_count
+        )
+        value (
+            #{productId},
+            #{memberNickName},
+            #{productName},
+            #{star},
+            #{createTime},
+            #{showStatus},
+            #{productAttribute},
+            #{collectCouont},
+            #{readCount},
+            #{content},
+            #{replayCount}
+        )
+    </insert>
+</mapper>

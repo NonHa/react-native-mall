@@ -78,10 +78,12 @@ public class OmsCarItemServiceImpl implements OmsCarItemService {
 
     @Override
     public List<CartPromotionItem> listPromotion(Long memberId, List<Long> carIds) {
+
         List<OmsCartItem> list = getList();
-        if (CollUtil.isNotEmpty(carIds)) {
+//        if (CollUtil.isNotEmpty(carIds)) {
             list = list.stream().filter(item -> carIds.contains(item.getId())).collect(Collectors.toList());
-        }
+//        }
+
          List<CartPromotionItem> promotionItems = new ArrayList<>();
         if (!CollectionUtil.isEmpty(list)) {
             promotionItems = promotionService.calcCartPromotion(list);

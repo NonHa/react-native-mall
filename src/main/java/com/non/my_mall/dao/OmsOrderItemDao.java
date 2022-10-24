@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface OmsOrderItemDao {
     int insertList(List<OmsOrderItem> list);
+    int update(OmsOrderItem param);
+    Integer confirmOrder(Long id);
 
 }
